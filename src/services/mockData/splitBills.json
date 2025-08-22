@@ -1,0 +1,122 @@
+[
+  {
+    "Id": 1,
+    "title": "Team Dinner",
+    "description": "Dinner at The Grand Restaurant",
+    "totalAmount": 240.00,
+    "currency": "USD",
+    "splitMethod": "equal",
+    "createdBy": 1,
+    "createdAt": "2024-01-15T18:30:00Z",
+    "dueDate": "2024-01-22T23:59:59Z",
+    "status": "active",
+    "participants": [
+      {
+        "contactId": 1,
+        "amountOwed": 60.00,
+        "status": "paid",
+        "paidAt": "2024-01-16T10:15:00Z"
+      },
+      {
+        "contactId": 2,
+        "amountOwed": 60.00,
+        "status": "pending",
+        "paidAt": null
+      },
+      {
+        "contactId": 3,
+        "amountOwed": 60.00,
+        "status": "pending",
+        "paidAt": null
+      },
+      {
+        "contactId": 4,
+        "amountOwed": 60.00,
+        "status": "paid",
+        "paidAt": "2024-01-16T14:22:00Z"
+      }
+    ]
+  },
+  {
+    "Id": 2,
+    "title": "Weekend Trip",
+    "description": "Shared accommodation costs",
+    "totalAmount": 480.00,
+    "currency": "USD",
+    "splitMethod": "equal",
+    "createdBy": 2,
+    "createdAt": "2024-01-10T12:00:00Z",
+    "dueDate": "2024-01-24T23:59:59Z",
+    "status": "active",
+    "participants": [
+      {
+        "contactId": 1,
+        "amountOwed": 120.00,
+        "status": "pending",
+        "paidAt": null
+      },
+      {
+        "contactId": 3,
+        "amountOwed": 120.00,
+        "status": "paid",
+        "paidAt": "2024-01-11T09:30:00Z"
+      },
+      {
+        "contactId": 5,
+        "amountOwed": 120.00,
+        "status": "pending",
+        "paidAt": null
+      },
+      {
+        "contactId": 6,
+        "amountOwed": 120.00,
+        "status": "paid",
+        "paidAt": "2024-01-12T16:45:00Z"
+      }
+    ]
+  },
+  {
+    "Id": 3,
+    "title": "Office Lunch",
+    "description": "Pizza order for the team",
+    "totalAmount": 85.50,
+    "currency": "USD",
+    "splitMethod": "equal",
+    "createdBy": 1,
+    "createdAt": "2024-01-12T13:15:00Z",
+    "dueDate": "2024-01-19T23:59:59Z",
+    "status": "settled",
+    "participants": [
+      {
+        "contactId": 2,
+        "amountOwed": 17.10,
+        "status": "paid",
+        "paidAt": "2024-01-12T14:00:00Z"
+      },
+      {
+        "contactId": 3,
+        "amountOwed": 17.10,
+        "status": "paid",
+        "paidAt": "2024-01-12T14:30:00Z"
+      },
+      {
+        "contactId": 4,
+        "amountOwed": 17.10,
+        "status": "paid",
+        "paidAt": "2024-01-12T15:15:00Z"
+      },
+      {
+        "contactId": 7,
+        "amountOwed": 17.10,
+        "status": "paid",
+        "paidAt": "2024-01-12T16:00:00Z"
+      },
+      {
+        "contactId": 8,
+        "amountOwed": 17.10,
+        "status": "paid",
+        "paidAt": "2024-01-13T10:00:00Z"
+      }
+    ]
+  }
+]

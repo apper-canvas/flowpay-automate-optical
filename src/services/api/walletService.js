@@ -142,7 +142,7 @@ async getFundingSources() {
       return fundingSourceData.map(fs => ({ ...fs }))
     } catch (error) {
       throw new Error("Failed to load funding sources")
-}
+    }
   },
 
   // Payment Method Management
@@ -264,9 +264,9 @@ async getFundingSources() {
         })
       }
 
-      return filtered
+return filtered
     } catch (error) {
-throw new Error("Failed to filter transactions")
+      throw new Error("Failed to filter transactions")
     }
   },
 
@@ -311,15 +311,63 @@ throw new Error("Failed to filter transactions")
 
       transactionsState.unshift(newTransaction)
 
+return {
+        wallet: { ...walletsState[walletIndex] },
+        transaction: { ...newTransaction }
+      }
+    } catch (error) {
+      throw new Error("Failed to send P2P transfer")
+    }
+  },
+
+  async processSplitBillPayment({ fromWalletId, splitBillId, participantId, amount, paymentMethodId }) {
+    await delay(500)
+    try {
+      const walletIndex = walletsState.findIndex(w => w.Id === parseInt(fromWalletId))
+      if (walletIndex === -1) {
+        throw new Error("Wallet not found")
+      }
+
+      const fundingSource = fundingSourceData.find(fs => fs.Id === parseInt(paymentMethodId))
+      if (!fundingSource) {
+        throw new Error("Payment method not found")
+      }
+
+      const currentBalance = walletsState[walletIndex].balance
+      const paymentAmount = parseFloat(amount)
+      
+      if (currentBalance < paymentAmount) {
+        throw new Error("Insufficient funds")
+      }
+
+      const newBalance = currentBalance - paymentAmount
+      walletsState[walletIndex] = {
+        ...walletsState[walletIndex],
+        balance: newBalance
+      }
+
+      // Create new transaction
+      const newTransaction = {
+        Id: Math.max(...transactionsState.map(t => t.Id)) + 1,
+        type: "split_bill",
+        amount: -paymentAmount,
+        currency: walletsState[walletIndex].currency,
+        recipient: `Split Bill Payment #${splitBillId}`,
+        note: `Participant ${participantId}`,
+        timestamp: new Date().toISOString(),
+        status: "completed"
+      }
+
+      transactionsState.unshift(newTransaction)
+
       return {
         wallet: { ...walletsState[walletIndex] },
         transaction: { ...newTransaction }
       }
     } catch (error) {
-throw new Error("Failed to send P2P transfer")
+      throw new Error("Failed to process split bill payment")
     }
   },
-
   async currencyExchange({ fromWalletId, toWalletId, fromAmount, toAmount, exchangeRate }) {
     await delay(500)
     try {
@@ -384,9 +432,9 @@ throw new Error("Failed to send P2P transfer")
         transactions: [exchangeTransaction, receiveTransaction]
       }
     } catch (error) {
-      throw new Error("Failed to process currency exchange")
+throw new Error("Failed to process currency exchange")
     }
-},
+  },
   // Business transaction methods
   async getBusinessTransactions(limit) {
     await delay(250)
@@ -464,8 +512,8 @@ throw new Error("Failed to send P2P transfer")
             { period: "Dec 2023", revenue: 45200.80 },
             { period: "Nov 2023", revenue: 42300.65 }
           ]
-        }
 }
+      }
     } catch (error) {
       throw new Error("Failed to load business metrics")
     }

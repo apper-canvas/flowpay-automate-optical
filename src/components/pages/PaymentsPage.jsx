@@ -23,13 +23,14 @@ const PaymentsPage = () => {
       comingSoon: false,
       path: "/payments/transfer"
     },
-    {
+{
       icon: "Users",
       title: "Split Bills",
       description: "Split expenses with your group easily",
-      comingSoon: true
+      comingSoon: false,
+      path: "/payments/split-bill"
     },
-{
+    {
       icon: "QrCode",
       title: "Pay with QR",
       description: "Scan and pay at participating merchants",

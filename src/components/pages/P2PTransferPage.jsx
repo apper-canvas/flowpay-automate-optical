@@ -1,17 +1,17 @@
-import { useState, useEffect } from "react"
-import { useNavigate } from "react-router-dom"
-import { motion } from "framer-motion"
-import { toast } from "react-toastify"
-import Button from "@/components/atoms/Button"
-import Input from "@/components/atoms/Input"
-import Card from "@/components/atoms/Card"
-import ContactPicker from "@/components/molecules/ContactPicker"
-import FundingSourceCard from "@/components/molecules/FundingSourceCard"
-import ApperIcon from "@/components/ApperIcon"
-import Loading from "@/components/ui/Loading"
-import Error from "@/components/ui/Error"
-import { walletService } from "@/services/api/walletService"
-import { contactService } from "@/services/api/contactService"
+import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { motion } from "framer-motion";
+import { toast } from "react-toastify";
+import { walletService } from "@/services/api/walletService";
+import { contactService } from "@/services/api/contactService";
+import ApperIcon from "@/components/ApperIcon";
+import Button from "@/components/atoms/Button";
+import Input from "@/components/atoms/Input";
+import Card from "@/components/atoms/Card";
+import ContactPicker from "@/components/molecules/ContactPicker";
+import FundingSourceCard from "@/components/molecules/FundingSourceCard";
+import Loading from "@/components/ui/Loading";
+import Error from "@/components/ui/Error";
 
 const P2PTransferPage = () => {
   const navigate = useNavigate()
@@ -290,7 +290,7 @@ const P2PTransferPage = () => {
                 <Error message={error} onRetry={loadFundingSources} />
               ) : (
                 <div className="space-y-3">
-                  {fundingSources.map((source) => (
+{fundingSources.map((source) => (
                     <FundingSourceCard
                       key={source.Id}
                       fundingSource={source}

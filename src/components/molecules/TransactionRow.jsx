@@ -21,9 +21,11 @@ const getTransactionIcon = (type) => {
 case "virtual_card_payment":
         return "CreditCard"
       case "checkout_payment":
-        return "ShoppingBag"
+return "ShoppingBag"
       case "subscription":
         return "Repeat"
+      case "split_bill":
+        return "Users"
       default:
         return "DollarSign"
     }
@@ -31,7 +33,7 @@ case "virtual_card_payment":
 
 const getTransactionColor = (type, amount) => {
     if (type === "received" || type === "deposit" || type === "p2p_received") return "text-success"
-    if (amount < 0 || type === "p2p_sent" || type === "virtual_card_payment" || type === "checkout_payment") return "text-error"
+    if (amount < 0 || type === "p2p_sent" || type === "virtual_card_payment" || type === "checkout_payment" || type === "split_bill") return "text-error"
     return "text-gray-900"
   }
 
