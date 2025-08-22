@@ -1,7 +1,8 @@
-import { motion } from "framer-motion"
-import Card from "@/components/atoms/Card"
-import Badge from "@/components/atoms/Badge"
-import ApperIcon from "@/components/ApperIcon"
+import { motion } from "framer-motion";
+import React from "react";
+import ApperIcon from "@/components/ApperIcon";
+import Badge from "@/components/atoms/Badge";
+import Card from "@/components/atoms/Card";
 
 const BalanceCard = ({ wallet, isPrimary = false, onClick }) => {
   const formatBalance = (balance, currency) => {
@@ -77,7 +78,15 @@ const BalanceCard = ({ wallet, isPrimary = false, onClick }) => {
                   {wallet.change24h > 0 ? "+" : ""}{wallet.change24h}% (24h)
                 </span>
               </div>
+</div>
             </div>
+            
+            {/* Optional spending alert indicator */}
+            {wallet.hasSpendingAlert && (
+              <div className="absolute top-2 right-2">
+                <div className="w-3 h-3 bg-warning rounded-full animate-pulse" />
+</div>
+            )}
           </div>
         </Card>
       </motion.div>

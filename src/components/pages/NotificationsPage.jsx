@@ -1,14 +1,13 @@
-import { useState, useEffect } from "react"
-import { useNavigate } from "react-router-dom"
-import { motion } from "framer-motion"
-import Card from "@/components/atoms/Card"
-import Button from "@/components/atoms/Button"
-import ApperIcon from "@/components/ApperIcon"
-import { toast } from "react-toastify"
+import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { motion } from "framer-motion";
+import { toast } from "react-toastify";
+import ApperIcon from "@/components/ApperIcon";
+import Button from "@/components/atoms/Button";
+import Card from "@/components/atoms/Card";
 
 const NotificationsPage = () => {
-  const navigate = useNavigate()
-  
+  const navigate = useNavigate();
   const [notifications, setNotifications] = useState({
     transactions: true,
     security: true,
@@ -19,31 +18,35 @@ const NotificationsPage = () => {
     lowBalance: true,
     largeTransaction: true,
     newDevice: true,
-    maintenance: false
-  })
+    maintenance: false,
+    subscriptionAlerts: true,
+    spendingThresholds: true,
+    autoRenewalWarnings: true,
+    subscriptionCancellation: true
+  });
 
   // Load notification settings from localStorage on mount
   useEffect(() => {
-    const savedNotifications = localStorage.getItem('notificationSettings')
+    const savedNotifications = localStorage.getItem('notificationSettings');
     if (savedNotifications) {
-      setNotifications(JSON.parse(savedNotifications))
+      setNotifications(JSON.parse(savedNotifications));
     }
-  }, [])
+  }, []);
 
   const handleNotificationToggle = (key) => {
     const newNotifications = {
       ...notifications,
       [key]: !notifications[key]
-    }
-    setNotifications(newNotifications)
-    localStorage.setItem('notificationSettings', JSON.stringify(newNotifications))
+    };
+    setNotifications(newNotifications);
+    localStorage.setItem('notificationSettings', JSON.stringify(newNotifications));
     
     const setting = notificationSections
       .flatMap(section => section.items)
-      .find(item => item.key === key)
+      .find(item => item.key === key);
     
-    toast.success(`${setting?.title} ${newNotifications[key] ? 'enabled' : 'disabled'}`)
-  }
+    toast.success(`${setting?.title} ${newNotifications[key] ? 'enabled' : 'disabled'}`);
+  };
 
   const ToggleSwitch = ({ enabled, onToggle }) => (
     <motion.button
@@ -59,7 +62,7 @@ const NotificationsPage = () => {
         className="inline-block h-5 w-5 transform rounded-full bg-white shadow-lg"
       />
     </motion.button>
-  )
+  );
 
   const notificationSections = [
     {
@@ -83,6 +86,36 @@ const NotificationsPage = () => {
           icon: "AlertTriangle",
           title: "Low Balance Warning",
           description: "Notify when balance falls below $50"
+        }
+      ]
+    },
+    {
+      title: "Subscriptions & Spending",
+      description: "Manage subscription-related notifications",
+      items: [
+        {
+          key: "subscriptionAlerts",
+          icon: "CreditCard",
+          title: "Subscription Alerts",
+          description: "Notify me about upcoming subscription payments"
+        },
+        {
+          key: "spendingThresholds", 
+          icon: "TrendingUp",
+          title: "Spending Thresholds",
+          description: "Alert when subscription spending exceeds set limits"
+        },
+        {
+          key: "autoRenewalWarnings",
+          icon: "RefreshCw",
+          title: "Auto-Renewal Warnings",
+          description: "Remind me before subscriptions auto-renew"
+        },
+        {
+          key: "subscriptionCancellation",
+          icon: "XCircle",
+          title: "Cancellation Reminders",
+          description: "Remind me to cancel unwanted subscriptions"
         }
       ]
     },
@@ -146,12 +179,12 @@ const NotificationsPage = () => {
         }
       ]
     }
-  ]
+  ];
 
   const handleSaveAll = () => {
-    localStorage.setItem('notificationSettings', JSON.stringify(notifications))
-    toast.success("All notification preferences saved!")
-  }
+    localStorage.setItem('notificationSettings', JSON.stringify(notifications));
+    toast.success("All notification preferences saved!");
+  };
 
   const handleResetToDefault = () => {
     const defaultSettings = {
@@ -164,21 +197,25 @@ const NotificationsPage = () => {
       lowBalance: true,
       largeTransaction: true,
       newDevice: true,
-      maintenance: false
-    }
-    setNotifications(defaultSettings)
-    localStorage.setItem('notificationSettings', JSON.stringify(defaultSettings))
-    toast.info("Reset to default notification settings")
-  }
+      maintenance: false,
+      subscriptionAlerts: true,
+      spendingThresholds: true,
+      autoRenewalWarnings: true,
+      subscriptionCancellation: true
+    };
+    setNotifications(defaultSettings);
+    localStorage.setItem('notificationSettings', JSON.stringify(defaultSettings));
+    toast.success("Notification preferences reset to default!");
+  };
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-gray-50">
       {/* Header */}
-      <div className="px-4 pt-12 pb-6">
+      <div className="bg-white border-b border-gray-200">
         <motion.div
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="flex items-center space-x-4"
+          className="px-4 py-4 flex items-center space-x-4"
         >
           <Button
             variant="ghost"

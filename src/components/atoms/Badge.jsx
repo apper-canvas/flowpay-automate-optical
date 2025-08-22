@@ -14,9 +14,11 @@ const Badge = forwardRef(({
     default: "bg-gray-100 text-gray-700",
     success: "bg-success/10 text-success",
     warning: "bg-warning/10 text-warning",
-    error: "bg-error/10 text-error",
+error: "bg-error/10 text-error",
     info: "bg-info/10 text-info",
-    primary: "bg-primary/10 text-primary"
+    primary: "bg-primary/10 text-primary",
+    alert: "bg-orange-100 text-orange-700",
+    danger: "bg-red-100 text-red-700"
   }
   
   const sizes = {

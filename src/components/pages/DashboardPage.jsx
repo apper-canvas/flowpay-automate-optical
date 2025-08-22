@@ -20,19 +20,27 @@ const DashboardPage = () => {
   const [error, setError] = useState("")
   const [searchQuery, setSearchQuery] = useState("")
   const [statusFilter, setStatusFilter] = useState("all")
-  const [dateFilter, setDateFilter] = useState("today")
+const [dateFilter, setDateFilter] = useState("today")
   const [reportLoading, setReportLoading] = useState("")
-
+  const [spendingAlerts, setSpendingAlerts] = useState([])
   const loadDashboardData = async () => {
     try {
       setLoading(true)
       setError("")
-      
-      const [dashboardMetrics, businessTransactions, settlementSchedule] = await Promise.all([
+const [dashboardMetrics, businessTransactions, settlementSchedule] = await Promise.all([
         businessService.getDashboardMetrics(),
         businessService.getBusinessTransactions(),
         businessService.getSettlementSchedule()
       ])
+      
+      // Load spending alerts from subscription service
+      try {
+        const { subscriptionService } = await import('@/services/api/subscriptionService')
+        const alerts = await subscriptionService.getSpendingAlerts()
+        setSpendingAlerts(alerts)
+      } catch (err) {
+        console.warn('Failed to load spending alerts:', err)
+      }
       
       setDashboardData(dashboardMetrics)
       setTransactions(businessTransactions)
@@ -256,9 +264,81 @@ const DashboardPage = () => {
                 <ApperIcon name="CheckCircle" size={24} className="text-success" />
               </div>
             </div>
-          </Card>
+</Card>
         </motion.div>
 
+        {/* Spending Alerts Section */}
+        {spendingAlerts.length > 0 && (
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.15 }}
+            className="mb-6"
+          >
+            <div className="flex items-center justify-between mb-4">
+              <h2 className="text-lg font-display font-semibold text-gray-900">
+                Spending Alerts
+              </h2>
+              <Button variant="ghost" size="sm">
+                View All
+                <ApperIcon name="ArrowRight" size={16} className="ml-1" />
+              </Button>
+            </div>
+            
+            <div className="grid grid-cols-1 gap-3">
+              {spendingAlerts.slice(0, 3).map((alert, index) => (
+                <motion.div
+                  key={alert.Id}
+                  initial={{ opacity: 0, x: -20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: 0.2 + index * 0.1 }}
+                >
+                  <Card padding="default" className={`border-l-4 ${
+                    alert.severity === 'high' ? 'border-l-error hover:shadow-error/10' :
+                    alert.severity === 'medium' ? 'border-l-warning hover:shadow-warning/10' : 'border-l-info hover:shadow-info/10'
+                  } hover:shadow-lg transition-all duration-200`}>
+                    <div className="flex items-start justify-between">
+                      <div className="flex items-start space-x-3">
+                        <div className={`w-10 h-10 rounded-full flex items-center justify-center ${
+                          alert.severity === 'high' ? 'bg-error/10' :
+                          alert.severity === 'medium' ? 'bg-warning/10' : 'bg-info/10'
+                        }`}>
+                          <ApperIcon 
+                            name={alert.type === 'spending_threshold' ? 'TrendingUp' : 
+                                  alert.type === 'upcoming_payment' ? 'Clock' : 'RefreshCw'} 
+                            size={18} 
+                            className={
+                              alert.severity === 'high' ? 'text-error' :
+                              alert.severity === 'medium' ? 'text-warning' : 'text-info'
+                            } 
+                          />
+                        </div>
+                        <div className="flex-1">
+                          <div className="flex items-center space-x-2 mb-1">
+                            <h4 className="font-semibold text-gray-900 text-sm">
+                              {alert.serviceName}
+                            </h4>
+                            <Badge variant={alert.severity === 'high' ? 'error' : alert.severity === 'medium' ? 'warning' : 'info'} size="xs">
+                              {alert.type.replace('_', ' ')}
+                            </Badge>
+                          </div>
+                          <p className="text-xs text-gray-600 leading-relaxed">
+                            {alert.message}
+                          </p>
+                          {alert.amount && (
+                            <p className="text-sm font-semibold text-gray-900 mt-2">
+                              {formatCurrency(alert.amount)}
+                            </p>
+                          )}
+                        </div>
+                      </div>
+                    </div>
+                  </Card>
+                </motion.div>
+              ))}
+            </div>
+          </motion.div>
+        )}
         {/* Quick Actions */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}

@@ -15,8 +15,9 @@ const variants = {
     gradient: "bg-gradient-to-br from-primary via-secondary to-primary text-white shadow-lg hover:shadow-xl",
     glass: "bg-white/25 backdrop-blur-[10px] border-white/18",
     elevated: "shadow-lg hover:shadow-xl",
-    clickable: "hover:shadow-lg cursor-pointer transition-all duration-200 hover:scale-[1.02] active:scale-[0.98]",
-    warning: "bg-gradient-to-r from-warning to-yellow-500 text-white shadow-lg hover:shadow-xl"
+clickable: "hover:shadow-lg cursor-pointer transition-all duration-200 hover:scale-[1.02] active:scale-[0.98]",
+    warning: "bg-gradient-to-r from-warning to-yellow-500 text-white shadow-lg hover:shadow-xl",
+    alert: "bg-gradient-to-r from-orange-500 to-red-500 text-white shadow-lg hover:shadow-xl"
   }
   
   const paddings = {

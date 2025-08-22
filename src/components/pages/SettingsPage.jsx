@@ -1,10 +1,10 @@
-import { useState, useEffect } from "react"
-import { useNavigate } from "react-router-dom"
-import { motion } from "framer-motion"
-import Card from "@/components/atoms/Card"
-import Button from "@/components/atoms/Button"
-import ApperIcon from "@/components/ApperIcon"
-import { toast } from "react-toastify"
+import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { motion } from "framer-motion";
+import { toast } from "react-toastify";
+import ApperIcon from "@/components/ApperIcon";
+import Button from "@/components/atoms/Button";
+import Card from "@/components/atoms/Card";
 
 const SettingsPage = () => {
   const navigate = useNavigate()
@@ -119,8 +119,32 @@ const SettingsPage = () => {
           enabled: fingerprintEnabled,
           onToggle: handleFingerprintToggle,
           disabled: !biometricEnabled,
+disabled: !biometricEnabled,
           indent: true
         }
+      ]
+    },
+    {
+      title: "Subscription & Spending",
+      items: [
+        {
+          icon: "CreditCard",
+          title: "Spending Alerts",
+          description: "Get notified when subscription spending exceeds limits",
+          action: () => navigate('/settings/notifications')
+        },
+        {
+          icon: "RefreshCw", 
+          title: "Auto-Renewal Preferences",
+          description: "Manage automatic subscription renewals",
+          action: () => navigate('/subscriptions')
+        },
+        {
+          icon: "TrendingUp",
+          title: "Subscription Analytics",
+          description: "View spending patterns and subscription insights",
+          action: () => navigate('/subscriptions')
+}
       ]
     },
     {

@@ -1,5 +1,6 @@
-import subscriptionData from "@/services/mockData/subscriptions.json"
-import { paymentMethodService } from "@/services/api/paymentMethodService"
+import subscriptionData from "@/services/mockData/subscriptions.json";
+import paymentMethodService from "@/services/api/paymentMethodService";
+import Error from "@/components/ui/Error";
 
 // Helper function to create delay
 const delay = (ms) => new Promise(resolve => setTimeout(resolve, ms))
@@ -341,10 +342,128 @@ export const subscriptionService = {
       ]
 
       return potentialSubscriptions
+return potentialSubscriptions
     } catch (error) {
       throw new Error("Failed to analyze transactions for subscriptions")
     }
-  }
+
+  async getSpendingAlerts() {
+    await delay(250)
+    try {
+      const now = new Date()
+      const alerts = []
+      
+      for (const subscription of subscriptionsState) {
+        if (subscription.status !== 'active') continue
+        
+        // Check spending threshold alerts
+        if (subscription.alertSettings?.spendingThreshold && subscription.spendingAlertThreshold) {
+          const monthlySpend = subscription.billingCycle === 'monthly' ? subscription.amount :
+                              subscription.billingCycle === 'yearly' ? subscription.amount / 12 :
+                              subscription.amount * 4 // quarterly to monthly
+          
+          if (monthlySpend >= subscription.spendingAlertThreshold) {
+            alerts.push({
+              Id: `spending_${subscription.Id}`,
+              type: 'spending_threshold',
+              subscriptionId: subscription.Id,
+              serviceName: subscription.serviceName,
+message: `Monthly spending for ${subscription.serviceName} ($${monthlySpend.toFixed(2)}) exceeds your alert threshold of $${subscription.spendingAlertThreshold.toFixed(2)}`,
+              amount: monthlySpend,
+              threshold: subscription.spendingAlertThreshold,
+              severity: monthlySpend >= subscription.spendingAlertThreshold * 1.5 ? 'high' : 'medium',
+              createdAt: now.toISOString()
+            })
+          }
+        }
+        
+        // Check upcoming payment alerts
+        if (subscription.alertSettings?.upcomingPayment) {
+          const paymentDate = new Date(subscription.nextPaymentDate)
+          const daysUntilPayment = Math.ceil((paymentDate - now) / (1000 * 60 * 60 * 24))
+          
+          if (daysUntilPayment <= 7 && daysUntilPayment > 0) {
+            alerts.push({
+              Id: `payment_${subscription.Id}`,
+              type: 'upcoming_payment',
+              subscriptionId: subscription.Id,
+              serviceName: subscription.serviceName,
+message: `${subscription.serviceName} payment of $${subscription.amount.toFixed(2)} due in ${daysUntilPayment} day${daysUntilPayment > 1 ? 's' : ''}`,
+              amount: subscription.amount,
+              daysUntil: daysUntilPayment,
+              severity: daysUntilPayment <= 3 ? 'high' : 'low',
+              createdAt: now.toISOString()
+            })
+          }
+        }
+        
+        // Check auto-renewal alerts
+        if (subscription.autoRenew && subscription.alertSettings?.autoRenewal) {
+          const paymentDate = new Date(subscription.nextPaymentDate)
+          const daysUntilRenewal = Math.ceil((paymentDate - now) / (1000 * 60 * 60 * 24))
+          
+          if (daysUntilRenewal <= 3 && daysUntilRenewal > 0) {
+            alerts.push({
+              Id: `renewal_${subscription.Id}`,
+              type: 'auto_renewal',
+              subscriptionId: subscription.Id,
+              serviceName: subscription.serviceName,
+message: `${subscription.serviceName} will auto-renew in ${daysUntilRenewal} day${daysUntilRenewal > 1 ? 's' : ''} for $${subscription.amount.toFixed(2)}`,
+              amount: subscription.amount,
+              daysUntil: daysUntilRenewal,
+              severity: 'medium',
+              createdAt: now.toISOString()
+            })
+          }
+        }
+      }
+      
+      return alerts.sort((a, b) => {
+        const severityOrder = { high: 3, medium: 2, low: 1 }
+        return severityOrder[b.severity] - severityOrder[a.severity]
+      })
+    } catch (error) {
+      throw new Error("Failed to get spending alerts")
+    }
+  },
+
+  async updateAlertSettings(subscriptionId, alertSettings) {
+    await delay(300)
+    try {
+      const subscriptionIndex = subscriptionsState.findIndex(s => s.Id === parseInt(subscriptionId))
+      if (subscriptionIndex === -1) {
+        throw new Error("Subscription not found")
+      }
+
+      subscriptionsState[subscriptionIndex] = {
+        ...subscriptionsState[subscriptionIndex],
+        alertSettings: { ...subscriptionsState[subscriptionIndex].alertSettings, ...alertSettings }
+      }
+
+      return { ...subscriptionsState[subscriptionIndex] }
+    } catch (error) {
+      throw new Error("Failed to update alert settings: " + error.message)
+    }
+  },
+
+  async updateSpendingThreshold(subscriptionId, threshold) {
+    await delay(300)
+    try {
+      const subscriptionIndex = subscriptionsState.findIndex(s => s.Id === parseInt(subscriptionId))
+      if (subscriptionIndex === -1) {
+        throw new Error("Subscription not found")
+      }
+
+      subscriptionsState[subscriptionIndex] = {
+        ...subscriptionsState[subscriptionIndex],
+        spendingAlertThreshold: parseFloat(threshold)
+      }
+
+      return { ...subscriptionsState[subscriptionIndex] }
+    } catch (error) {
+      throw new Error("Failed to update spending threshold: " + error.message)
+    }
+}
 }
 
 // Helper function to calculate next payment date based on billing cycle
