@@ -191,7 +191,57 @@ async getFundingSources() {
 
       return filtered
     } catch (error) {
-      throw new Error("Failed to filter transactions")
+throw new Error("Failed to filter transactions")
+    }
+  },
+
+  async sendP2PTransfer({ fromWalletId, toContactId, amount, paymentMethodId, note }) {
+    await delay(600)
+    try {
+      const walletIndex = walletsState.findIndex(w => w.Id === parseInt(fromWalletId))
+      if (walletIndex === -1) {
+        throw new Error("Wallet not found")
+      }
+
+      const fundingSource = fundingSourceData.find(fs => fs.Id === parseInt(paymentMethodId))
+      if (!fundingSource) {
+        throw new Error("Payment method not found")
+      }
+
+      // For simplicity, we'll just deduct from wallet balance
+      const currentBalance = walletsState[walletIndex].balance
+      const transferAmount = parseFloat(amount)
+      
+      if (currentBalance < transferAmount) {
+        throw new Error("Insufficient funds")
+      }
+
+      const newBalance = currentBalance - transferAmount
+      walletsState[walletIndex] = {
+        ...walletsState[walletIndex],
+        balance: newBalance
+      }
+
+      // Create new transaction
+      const newTransaction = {
+        Id: Math.max(...transactionsState.map(t => t.Id)) + 1,
+        type: "p2p_sent",
+        amount: -transferAmount,
+        currency: walletsState[walletIndex].currency,
+        recipient: `Contact ID: ${toContactId}`,
+        note: note || "",
+        timestamp: new Date().toISOString(),
+        status: "completed"
+      }
+
+      transactionsState.unshift(newTransaction)
+
+      return {
+        wallet: { ...walletsState[walletIndex] },
+        transaction: { ...newTransaction }
+      }
+    } catch (error) {
+      throw new Error("Failed to send P2P transfer")
     }
   }
 }

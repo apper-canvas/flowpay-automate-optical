@@ -68,7 +68,25 @@
     "amount": -500.00,
     "currency": "USD",
     "recipient": "EUR Exchange",
+"recipient": "EUR Exchange",
     "timestamp": "2024-01-11T14:20:00Z",
     "status": "completed"
-  }
-]
+  },
+  {
+    "Id": 9,
+    "type": "p2p_sent",
+    "amount": -75.00,
+    "currency": "USD",
+    "recipient": "John Smith",
+    "timestamp": "2024-01-10T16:30:00Z",
+    "status": "completed"
+  },
+  {
+    "Id": 10,
+    "type": "p2p_received",
+    "amount": 120.00,
+    "currency": "USD",
+    "recipient": "Emma Wilson",
+    "timestamp": "2024-01-09T14:15:00Z",
+    "status": "completed"
+  }]

@@ -4,7 +4,7 @@ import ApperIcon from "@/components/ApperIcon"
 import Badge from "@/components/atoms/Badge"
 
 const TransactionRow = ({ transaction, onClick }) => {
-  const getTransactionIcon = (type) => {
+const getTransactionIcon = (type) => {
     switch (type) {
       case "payment":
         return "ArrowUpRight"
@@ -14,14 +14,18 @@ const TransactionRow = ({ transaction, onClick }) => {
         return "Plus"
       case "exchange":
         return "RefreshCw"
+      case "p2p_sent":
+        return "Send"
+      case "p2p_received":
+        return "UserPlus"
       default:
         return "DollarSign"
     }
   }
 
-  const getTransactionColor = (type, amount) => {
-    if (type === "received" || type === "deposit") return "text-success"
-    if (amount < 0) return "text-error"
+const getTransactionColor = (type, amount) => {
+    if (type === "received" || type === "deposit" || type === "p2p_received") return "text-success"
+    if (amount < 0 || type === "p2p_sent") return "text-error"
     return "text-gray-900"
   }
 
