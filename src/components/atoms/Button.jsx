@@ -1,6 +1,6 @@
-import { forwardRef } from "react"
-import { motion } from "framer-motion"
-import { cn } from "@/utils/cn"
+import React, { forwardRef } from "react";
+import { motion } from "framer-motion";
+import { cn } from "@/utils/cn";
 
 const Button = forwardRef(({ 
   children, 
@@ -20,10 +20,10 @@ const Button = forwardRef(({
 accent: "bg-gradient-to-r from-accent to-orange-500 text-white shadow-lg hover:shadow-xl active:scale-[0.98]",
     success: "bg-gradient-to-r from-success to-green-600 text-white shadow-lg hover:shadow-xl active:scale-[0.98]",
     info: "bg-gradient-to-r from-info to-blue-600 text-white shadow-lg hover:shadow-xl active:scale-[0.98]",
-    warning: "bg-gradient-to-r from-warning to-yellow-600 text-white shadow-lg hover:shadow-xl active:scale-[0.98]",
-    danger: "bg-gradient-to-r from-error to-red-600 text-white shadow-lg hover:shadow-xl active:scale-[0.98]"
+warning: "bg-gradient-to-r from-warning to-yellow-600 text-white shadow-lg hover:shadow-xl active:scale-[0.98]",
+    danger: "bg-gradient-to-r from-error to-red-600 text-white shadow-lg hover:shadow-xl active:scale-[0.98]",
+    destructive: "bg-gradient-to-r from-error to-red-600 text-white shadow-lg hover:shadow-xl active:scale-[0.98]"
   }
-  
   const sizes = {
     sm: "text-sm px-3 py-2 rounded-lg",
     md: "text-sm px-4 py-2.5 rounded-xl",

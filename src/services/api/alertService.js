@@ -409,6 +409,7 @@ export const alertService = {
   },
 
   async searchAlerts(query) {
+async searchAlerts(query) {
     await delay(200)
     try {
       const lowercaseQuery = query.toLowerCase()
@@ -418,11 +419,10 @@ export const alertService = {
         alert.serviceName.toLowerCase().includes(lowercaseQuery)
       )
 
-return filtered.map(alert => ({ ...alert }))
+      return filtered.map(alert => ({ ...alert }))
     } catch (error) {
       throw new Error("Failed to search alerts")
     }
-  },
 
   async createSecurityAlert(alertData) {
     await delay(200)

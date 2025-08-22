@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { AnimatePresence, motion } from "framer-motion";
 import { toast } from "react-toastify";
 import { format, formatDistanceToNow } from "date-fns";
-import alertService from "@/services/api/alertService";
+import { alertService } from "@/services/api/alertService";
 import ApperIcon from "@/components/ApperIcon";
 import Badge from "@/components/atoms/Badge";
 import Button from "@/components/atoms/Button";
