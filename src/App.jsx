@@ -1,26 +1,29 @@
-import { BrowserRouter, Routes, Route } from "react-router-dom"
-import { ToastContainer } from "react-toastify"
-import Layout from "@/components/pages/Layout"
-import WalletPage from "@/components/pages/WalletPage"
-import PaymentsPage from "@/components/pages/PaymentsPage"
-import P2PTransferPage from "@/components/pages/P2PTransferPage"
-import CurrencyExchangePage from "@/components/pages/CurrencyExchangePage"
-import QRScannerPage from "@/components/pages/QRScannerPage"
-import HistoryPage from "@/components/pages/HistoryPage"
-import BusinessPage from "@/components/pages/BusinessPage"
-import SettlementsPage from "@/components/pages/SettlementsPage"
-import ToolsPage from "@/components/pages/ToolsPage"
-import MorePage from "@/components/pages/MorePage"
-import SettingsPage from "@/components/pages/SettingsPage"
-import NotificationsPage from "@/components/pages/NotificationsPage"
-import SupportPage from "@/components/pages/SupportPage"
+import { BrowserRouter, Route, Routes } from "react-router-dom";
+import { ToastContainer } from "react-toastify";
+import DashboardPage from "@/components/pages/DashboardPage";
+import React from "react";
+import P2PTransferPage from "@/components/pages/P2PTransferPage";
+import HistoryPage from "@/components/pages/HistoryPage";
+import SettingsPage from "@/components/pages/SettingsPage";
+import NotificationsPage from "@/components/pages/NotificationsPage";
+import MorePage from "@/components/pages/MorePage";
+import QRScannerPage from "@/components/pages/QRScannerPage";
+import CurrencyExchangePage from "@/components/pages/CurrencyExchangePage";
+import WalletPage from "@/components/pages/WalletPage";
+import Layout from "@/components/pages/Layout";
+import PaymentsPage from "@/components/pages/PaymentsPage";
+import ToolsPage from "@/components/pages/ToolsPage";
+import SettlementsPage from "@/components/pages/SettlementsPage";
+import BusinessPage from "@/components/pages/BusinessPage";
+import SupportPage from "@/components/pages/SupportPage";
 function App() {
   return (
     <>
       <BrowserRouter>
 <Routes>
-          <Route path="/" element={<Layout />}>
-<Route index element={<WalletPage />} />
+<Route path="/" element={<Layout />}>
+            <Route index element={<WalletPage />} />
+            <Route path="/dashboard" element={<DashboardPage />} />
             <Route path="/payments" element={<PaymentsPage />} />
             <Route path="/payments/transfer" element={<P2PTransferPage />} />
             <Route path="/payments/exchange" element={<CurrencyExchangePage />} />

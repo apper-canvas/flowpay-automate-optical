@@ -10,11 +10,12 @@ const Card = forwardRef(({
 }, ref) => {
   const baseStyles = "bg-surface rounded-xl shadow-sm border border-gray-100 transition-all duration-200"
   
-  const variants = {
+const variants = {
     default: "hover:shadow-md",
     gradient: "bg-gradient-to-br from-primary via-secondary to-primary text-white shadow-lg hover:shadow-xl",
     glass: "bg-white/25 backdrop-blur-[10px] border-white/18",
-    elevated: "shadow-lg hover:shadow-xl"
+    elevated: "shadow-lg hover:shadow-xl",
+    clickable: "hover:shadow-lg cursor-pointer transition-all duration-200 hover:scale-[1.02] active:scale-[0.98]"
   }
   
   const paddings = {

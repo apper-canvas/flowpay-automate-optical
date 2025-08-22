@@ -174,15 +174,34 @@ Generate professional invoices
                 </div>
               </div>
             </Card>
-            
+<Card
+              padding="lg"
+              className="transition-all duration-200 cursor-pointer hover:shadow-lg hover:scale-[1.02] active:scale-[0.98]"
+              onClick={() => navigate('/dashboard')}
+            >
+              <div className="flex items-center space-x-4">
+                <div className="w-12 h-12 rounded-xl bg-success/10 flex items-center justify-center">
+                  <ApperIcon name="BarChart3" size={24} className="text-success" />
+                </div>
+                <div>
+                  <h4 className="font-display font-semibold text-gray-900 mb-1">
+                    Business Dashboard
+                  </h4>
+                  <p className="text-sm text-gray-600">
+                    View analytics and download reports
+                  </p>
+                </div>
+              </div>
+            </Card>
+
             <Card
               padding="lg"
               className="transition-all duration-200 cursor-pointer hover:shadow-lg hover:scale-[1.02] active:scale-[0.98]"
               onClick={() => navigate('/business/settlements')}
             >
               <div className="flex items-center space-x-4">
-                <div className="w-12 h-12 rounded-xl bg-success/10 flex items-center justify-center">
-                  <ApperIcon name="Banknote" size={24} className="text-success" />
+                <div className="w-12 h-12 rounded-xl bg-warning/10 flex items-center justify-center">
+                  <ApperIcon name="Banknote" size={24} className="text-warning" />
                 </div>
                 <div>
                   <h4 className="font-display font-semibold text-gray-900 mb-1">
@@ -193,7 +212,7 @@ Generate professional invoices
                   </p>
                 </div>
               </div>
-</Card>
+            </Card>
           </div>
         </motion.div>
 

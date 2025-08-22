@@ -457,7 +457,67 @@ throw new Error("Failed to generate QR code")
       };
       return { ...feeBreakdown }
     } catch (error) {
-      throw new Error("Failed to load fee breakdown")
+throw new Error("Failed to load fee breakdown")
+    }
+  },
+
+  async getDashboardMetrics() {
+    await delay(400)
+    try {
+      const dashboardMetrics = {
+        todaySales: 2450.75,
+        todayTransactions: 23,
+        pendingSettlements: 12450.75,
+        monthlyRevenue: 48750.00,
+        successRate: 97.8,
+        nextSettlementDate: "2024-01-17T09:00:00Z",
+        totalFees: 892.35,
+        recentActivity: {
+          lastTransaction: "2024-01-15T14:30:00Z",
+          lastSettlement: "2024-01-15T09:00:00Z",
+          lastRefund: "2024-01-14T16:45:00Z"
+        },
+        trends: {
+          salesGrowth: 12.5,
+          transactionGrowth: 8.2,
+          successRateChange: 0.3
+        },
+        topCustomers: [
+          { name: "Sarah Johnson", amount: 856.30, transactions: 8 },
+          { name: "John Smith", amount: 642.50, transactions: 5 },
+          { name: "Emma Davis", amount: 534.20, transactions: 6 }
+        ]
+      }
+      return { ...dashboardMetrics }
+    } catch (error) {
+      throw new Error("Failed to load dashboard metrics")
+    }
+  },
+
+  async downloadSalesReport(reportType, dateRange) {
+    await delay(800)
+    try {
+      const reportTypes = {
+        sales: "Sales Summary Report",
+        settlements: "Settlement Activity Report", 
+        analytics: "Business Analytics Report",
+        transactions: "Transaction History Report"
+      }
+
+      const report = {
+        type: reportType,
+        title: reportTypes[reportType] || "Business Report",
+        dateRange: dateRange,
+        generatedAt: new Date().toISOString(),
+        downloadUrl: `https://reports.flowpay.com/${reportType}-${Date.now()}.pdf`,
+        fileName: `${reportType}-report-${new Date().toISOString().split('T')[0]}.pdf`,
+        size: "2.4 MB",
+        pages: Math.floor(Math.random() * 20) + 5
+      }
+
+      return { ...report }
+    } catch (error) {
+      throw new Error(`Failed to generate ${reportType} report`)
     }
   }
 }
