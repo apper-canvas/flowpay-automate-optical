@@ -37,27 +37,28 @@ function App() {
     <>
       <BrowserRouter>
 <Routes>
-<Route path="/" element={<Layout />}>
+          <Route path="/" element={<Layout />}>
             <Route index element={<WalletPage />} />
             <Route path="/dashboard" element={<DashboardPage />} />
-<Route path="/alerts" element={<AlertsPage />} />
+            <Route path="/alerts" element={<AlertsPage />} />
             <Route path="/payments" element={<PaymentsPage />} />
             <Route path="/payments/transfer" element={<P2PTransferPage />} />
-<Route path="/payments/split-bill" element={<SplitBillPage />} />
+            <Route path="/payments/split-bill" element={<SplitBillPage />} />
             <Route path="/payments/split-bill/:id" element={<SplitBillPage />} />
             <Route path="/payments/exchange" element={<CurrencyExchangePage />} />
             <Route path="/checkout" element={<CheckoutPage />} />
             <Route path="/history" element={<HistoryPage />} />
+            <Route path="/history/split-bills" element={<HistoryPage />} />
             <Route path="/business" element={<BusinessPage />} />
-<Route path="/business/settlements" element={<SettlementsPage />} />
+            <Route path="/business/settlements" element={<SettlementsPage />} />
             <Route path="/business/tools" element={<ToolsPage />} />
             <Route path="/business/payment-links" element={<PaymentLinksPage />} />
             <Route path="/business/invoices" element={<InvoicePage />} />
-<Route path="/more" element={<MorePage />} />
+            <Route path="/more" element={<MorePage />} />
             <Route path="/settings" element={<SettingsPage />} />
-<Route path="/settings/notifications" element={<NotificationsPage />} />
+            <Route path="/settings/notifications" element={<NotificationsPage />} />
             <Route path="/settings/saved-methods" element={<SavedMethodsPage />} />
-<Route path="/settings/support" element={<SupportPage />} />
+            <Route path="/settings/support" element={<SupportPage />} />
             <Route path="/subscriptions" element={<SubscriptionPage />} />
             <Route path="/billing-calendar" element={<BillingCalendarPage />} />
             <Route path="/virtual-cards" element={<VirtualCardsPage />} />

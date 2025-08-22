@@ -2,6 +2,7 @@ import { useState, useEffect } from "react"
 import { motion } from "framer-motion"
 import { toast } from "react-toastify"
 import { format, parseISO } from "date-fns"
+import { useNavigate } from "react-router-dom"
 import Card from "@/components/atoms/Card"
 import Badge from "@/components/atoms/Badge"
 import Input from "@/components/atoms/Input"
@@ -13,6 +14,7 @@ import Empty from "@/components/ui/Empty"
 import { businessService } from "@/services/api/businessService"
 
 const SettlementsPage = () => {
+  const navigate = useNavigate()
   const [settlements, setSettlements] = useState([])
   const [pendingPayouts, setPendingPayouts] = useState([])
   const [settlementMetrics, setSettlementMetrics] = useState(null)
@@ -226,6 +228,106 @@ const SettlementsPage = () => {
           </Card>
         </motion.div>
 
+{/* Split Bill Settlements */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.25 }}
+        >
+          <div className="flex items-center justify-between mb-4">
+            <h2 className="text-lg font-display font-semibold text-gray-900">
+              Split Bill Settlements
+            </h2>
+            <Button variant="ghost" size="sm" onClick={() => navigate("/history")}>
+              <ApperIcon name="ArrowRight" size={14} className="mr-1" />
+              View All
+            </Button>
+          </div>
+
+          <Card padding="lg">
+            <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
+              <div className="text-center">
+                <p className="text-xl font-display font-bold text-gray-900">24</p>
+                <p className="text-sm text-gray-600">Active Bills</p>
+              </div>
+              <div className="text-center">
+                <p className="text-xl font-display font-bold text-warning">12</p>
+                <p className="text-sm text-gray-600">Pending Payments</p>
+              </div>
+              <div className="text-center">
+                <p className="text-xl font-display font-bold text-success">156</p>
+                <p className="text-sm text-gray-600">Settled Bills</p>
+              </div>
+              <div className="text-center">
+                <p className="text-xl font-display font-bold text-primary">
+                  {formatCurrency(2340.50)}
+                </p>
+                <p className="text-sm text-gray-600">Total Outstanding</p>
+              </div>
+            </div>
+
+            <div className="space-y-3">
+              {[
+                {
+                  title: "Team Lunch - Downtown",
+                  amount: 125.50,
+                  participants: 4,
+                  paid: 3,
+                  status: "active",
+                  dueDate: new Date(Date.now() + 2 * 24 * 60 * 60 * 1000)
+                },
+                {
+                  title: "Weekend Trip Expenses",
+                  amount: 890.25,
+                  participants: 6,
+                  paid: 4,
+                  status: "active",
+                  dueDate: new Date(Date.now() + 5 * 24 * 60 * 60 * 1000)
+                },
+                {
+                  title: "Office Party Supplies",
+                  amount: 67.80,
+                  participants: 8,
+                  paid: 8,
+                  status: "settled",
+                  dueDate: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000)
+                }
+              ].map((bill, index) => (
+                <div key={index} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                  <div className="flex items-center space-x-3">
+                    <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center">
+                      <ApperIcon name="Users" size={14} className="text-primary" />
+                    </div>
+                    <div>
+                      <p className="font-medium text-gray-900 text-sm">{bill.title}</p>
+                      <p className="text-xs text-gray-500">
+                        {bill.paid}/{bill.participants} paid • Due {format(bill.dueDate, "MMM dd")}
+                      </p>
+                    </div>
+                  </div>
+                  
+                  <div className="flex items-center space-x-3">
+                    <div className="text-right">
+                      <p className="font-semibold text-sm text-gray-900">
+                        {formatCurrency(bill.amount)}
+                      </p>
+                      <div className="w-16 bg-gray-200 rounded-full h-1 mt-1">
+                        <div 
+                          className="bg-success h-1 rounded-full"
+                          style={{ width: `${(bill.paid / bill.participants) * 100}%` }}
+                        />
+                      </div>
+                    </div>
+                    <Badge variant={bill.status === "settled" ? "success" : "warning"} size="xs">
+                      {bill.status}
+                    </Badge>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </Card>
+        </motion.div>
+
         {/* Pending Payouts */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -295,7 +397,6 @@ const SettlementsPage = () => {
             </div>
           )}
         </motion.div>
-
         {/* Settlement Schedule */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}

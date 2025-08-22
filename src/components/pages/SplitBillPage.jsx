@@ -270,19 +270,28 @@ const getStepTitle = () => {
 
   return (
     <div className="min-h-screen bg-background">
-      {/* Header */}
+{/* Header */}
       <div className="px-4 pt-12 pb-6">
         <motion.div
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="flex items-center space-x-4"
+          className="flex items-center justify-between"
         >
-          <Button variant="ghost" size="sm" onClick={() => view === "list" ? navigate("/payments") : handleBack()}>
-            <ApperIcon name="ArrowLeft" size={18} />
-          </Button>
-          <h1 className="text-2xl font-display font-bold text-gray-900">
-            {view === "list" ? "Split Bills" : getStepTitle()}
-          </h1>
+          <div className="flex items-center space-x-4">
+            <Button variant="ghost" size="sm" onClick={() => view === "list" ? navigate("/payments") : handleBack()}>
+              <ApperIcon name="ArrowLeft" size={18} />
+            </Button>
+            <h1 className="text-2xl font-display font-bold text-gray-900">
+              {view === "list" ? "Split Bills" : getStepTitle()}
+            </h1>
+          </div>
+          
+          {view === "list" && (
+            <Button variant="ghost" size="sm" onClick={() => navigate("/history")}>
+              <ApperIcon name="History" size={16} className="mr-1" />
+              History
+            </Button>
+          )}
         </motion.div>
       </div>
 

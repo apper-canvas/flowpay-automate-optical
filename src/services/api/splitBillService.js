@@ -336,7 +336,7 @@ async sendPaymentReminder(splitBillId, contactId) {
     }
   },
 
-  async getSplitBillsByCategory() {
+async getSplitBillsByCategory() {
     await delay(200)
     try {
       const categorySummary = splitBillsState.reduce((acc, bill) => {
@@ -359,6 +359,80 @@ async sendPaymentReminder(splitBillId, contactId) {
       return categorySummary
     } catch (error) {
       throw new Error("Failed to get split bills by category: " + error.message)
+    }
+  },
+
+  async getSplitBillHistory(filters = {}) {
+    await delay(300)
+    try {
+      let filteredBills = [...splitBillsState]
+      
+      // Apply filters
+      if (filters.status) {
+        filteredBills = filteredBills.filter(bill => bill.status === filters.status)
+      }
+      
+      if (filters.dateFrom) {
+        filteredBills = filteredBills.filter(bill => 
+          new Date(bill.createdAt) >= new Date(filters.dateFrom)
+        )
+      }
+      
+      if (filters.dateTo) {
+        filteredBills = filteredBills.filter(bill => 
+          new Date(bill.createdAt) <= new Date(filters.dateTo)
+        )
+      }
+      
+      if (filters.category) {
+        filteredBills = filteredBills.filter(bill => bill.category === filters.category)
+      }
+      
+      // Sort by creation date (newest first)
+      filteredBills.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
+      
+      return filteredBills.map(bill => ({ ...bill }))
+    } catch (error) {
+      throw new Error("Failed to get split bill history: " + error.message)
+    }
+  },
+
+  async generateExpenseReport(splitBillIds = []) {
+    await delay(400)
+    try {
+      const bills = splitBillIds.length > 0 
+        ? splitBillsState.filter(bill => splitBillIds.includes(bill.Id))
+        : splitBillsState
+      
+      const report = {
+        generatedAt: new Date().toISOString(),
+        totalBills: bills.length,
+        totalAmount: bills.reduce((sum, bill) => sum + bill.totalAmount, 0),
+        settledBills: bills.filter(bill => bill.status === "settled").length,
+        activeBills: bills.filter(bill => bill.status === "active").length,
+        categorySummary: bills.reduce((acc, bill) => {
+          const category = bill.category || "Uncategorized"
+          if (!acc[category]) {
+            acc[category] = { count: 0, amount: 0 }
+          }
+          acc[category].count++
+          acc[category].amount += bill.totalAmount
+          return acc
+        }, {}),
+        bills: bills.map(bill => ({
+          ...bill,
+          settlementProgress: {
+            totalParticipants: bill.participants.length,
+            paidParticipants: bill.participants.filter(p => p.status === "paid").length,
+            paidAmount: bill.participants.filter(p => p.status === "paid").reduce((sum, p) => sum + p.amountOwed, 0),
+            pendingAmount: bill.participants.filter(p => p.status === "pending").reduce((sum, p) => sum + p.amountOwed, 0)
+          }
+        }))
+      }
+      
+      return report
+    } catch (error) {
+      throw new Error("Failed to generate expense report: " + error.message)
     }
   }
 }

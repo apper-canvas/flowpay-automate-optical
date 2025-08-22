@@ -21,11 +21,15 @@ const getTransactionIcon = (type) => {
 case "virtual_card_payment":
         return "CreditCard"
       case "checkout_payment":
-return "ShoppingBag"
+        return "ShoppingBag"
       case "subscription":
         return "Repeat"
       case "split_bill":
         return "Users"
+      case "currency_exchange":
+        return "RefreshCw"
+      case "business_payment":
+        return "Building"
       default:
         return "DollarSign"
     }
@@ -83,7 +87,7 @@ const getTransactionColor = (type, amount) => {
               size={18} 
               className="text-gray-600" 
             />
-          </div>
+</div>
           
           <div>
             <p className="font-medium text-gray-900 text-sm">
@@ -96,6 +100,12 @@ const getTransactionColor = (type, amount) => {
               <Badge variant={getStatusVariant(transaction.status)} size="xs">
                 {transaction.status}
               </Badge>
+              {transaction.type === "split_bill" && transaction.note && (
+                <>
+                  <span className="text-gray-300">•</span>
+                  <p className="text-xs text-gray-500">{transaction.note}</p>
+                </>
+              )}
             </div>
           </div>
         </div>
