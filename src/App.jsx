@@ -4,6 +4,7 @@ import DashboardPage from "@/components/pages/DashboardPage";
 import React from "react";
 import P2PTransferPage from "@/components/pages/P2PTransferPage";
 import VirtualCardsPage from "@/components/pages/VirtualCardsPage";
+import CheckoutPage from "@/components/pages/CheckoutPage";
 import PaymentLinksPage from "@/components/pages/PaymentLinksPage";
 import HistoryPage from "@/components/pages/HistoryPage";
 import SettingsPage from "@/components/pages/SettingsPage";
@@ -31,6 +32,7 @@ function App() {
             <Route path="/payments" element={<PaymentsPage />} />
             <Route path="/payments/transfer" element={<P2PTransferPage />} />
             <Route path="/payments/exchange" element={<CurrencyExchangePage />} />
+            <Route path="/checkout" element={<CheckoutPage />} />
             <Route path="/history" element={<HistoryPage />} />
             <Route path="/business" element={<BusinessPage />} />
 <Route path="/business/settlements" element={<SettlementsPage />} />

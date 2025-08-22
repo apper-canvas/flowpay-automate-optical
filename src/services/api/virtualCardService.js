@@ -88,7 +88,7 @@ export const virtualCardService = {
     }
   },
 
-  async recordSpending(id, amount) {
+async recordSpending(id, amount) {
     await delay(400)
     try {
       const cardIndex = virtualCardsState.findIndex(c => c.Id === parseInt(id))
@@ -112,6 +112,63 @@ export const virtualCardService = {
       return { ...virtualCardsState[cardIndex] }
     } catch (error) {
       throw new Error("Failed to record spending")
+    }
+  },
+
+  async processPayment(id, paymentData) {
+    await delay(600)
+    try {
+      const cardIndex = virtualCardsState.findIndex(c => c.Id === parseInt(id))
+      if (cardIndex === -1) {
+        throw new Error("Virtual card not found")
+      }
+
+      const card = virtualCardsState[cardIndex]
+      const amount = parseFloat(paymentData.amount)
+
+      if (!card.isActive) {
+        throw new Error("Card is inactive")
+      }
+
+      const remainingBalance = this.getRemainingBalance(card)
+      if (remainingBalance < amount) {
+        throw new Error("Insufficient card balance")
+      }
+
+      const newSpending = card.currentSpending + amount
+      if (newSpending > card.spendingLimit) {
+        throw new Error("Spending limit exceeded")
+      }
+
+      // Update card spending
+      virtualCardsState[cardIndex] = {
+        ...card,
+        currentSpending: newSpending,
+        lastUsed: new Date().toISOString()
+      }
+
+      // Create transaction record
+      const { default: transactionData } = await import("@/services/mockData/transactions.json")
+      const newTransaction = {
+        Id: Math.max(...transactionData.map(t => t.Id), 0) + 1,
+        type: "virtual_card_payment",
+        amount: -amount,
+        currency: paymentData.currency || card.currency,
+        recipient: paymentData.merchant || "Online Purchase",
+        note: `Order: ${paymentData.orderId} • Card: ****${card.cardNumber.slice(-4)}`,
+        timestamp: new Date().toISOString(),
+        status: "completed",
+        cardId: card.Id
+      }
+
+      return {
+        card: { ...virtualCardsState[cardIndex] },
+        transaction: { ...newTransaction },
+        success: true,
+        message: "Payment processed successfully"
+      }
+    } catch (error) {
+      throw new Error(error.message || "Failed to process payment")
     }
   },
 

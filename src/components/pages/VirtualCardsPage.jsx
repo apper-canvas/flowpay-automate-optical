@@ -143,15 +143,25 @@ const VirtualCardsPage = () => {
               </p>
             </div>
           </div>
-          
-          <Button
-            variant="primary"
-            onClick={() => setShowCreator(true)}
-            className="flex items-center space-x-2"
-          >
-            <ApperIcon name="Plus" size={16} />
-            <span>Create Card</span>
-          </Button>
+<div className="flex items-center space-x-3">
+            <Button
+              variant="secondary"
+              onClick={() => navigate("/checkout?merchant=Demo Store&amount=25.99&currency=USD&orderId=DEMO-123")}
+              className="flex items-center space-x-2"
+            >
+              <ApperIcon name="ShoppingBag" size={16} />
+              <span>Test Checkout</span>
+            </Button>
+            
+            <Button
+              variant="primary"
+              onClick={() => setShowCreator(true)}
+              className="flex items-center space-x-2"
+            >
+              <ApperIcon name="Plus" size={16} />
+              <span>Create Card</span>
+            </Button>
+          </div>
         </motion.div>
       </div>
 
