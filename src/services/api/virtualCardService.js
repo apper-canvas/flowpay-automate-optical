@@ -121,6 +121,73 @@ export const virtualCardService = {
 
   getRemainingBalance(card) {
     return card.spendingLimit - card.currentSpending
+},
+
+  async toggleFreeze(id) {
+    await delay(400)
+    try {
+      const cardIndex = virtualCardsState.findIndex(c => c.Id === parseInt(id))
+      if (cardIndex === -1) {
+        throw new Error("Virtual card not found")
+      }
+
+      const card = virtualCardsState[cardIndex]
+      virtualCardsState[cardIndex] = {
+        ...card,
+        isFrozen: !card.isFrozen
+      }
+
+      return { ...virtualCardsState[cardIndex] }
+    } catch (error) {
+      throw new Error("Failed to toggle card freeze status")
+    }
+  },
+
+  async updateSpendingLimit(id, newLimit) {
+    await delay(400)
+    try {
+      const cardIndex = virtualCardsState.findIndex(c => c.Id === parseInt(id))
+      if (cardIndex === -1) {
+        throw new Error("Virtual card not found")
+      }
+
+      const card = virtualCardsState[cardIndex]
+      const limit = parseFloat(newLimit)
+      
+      if (limit <= 0) {
+        throw new Error("Spending limit must be greater than 0")
+      }
+
+      if (limit < card.currentSpending) {
+        throw new Error("New limit cannot be less than current spending")
+      }
+
+      virtualCardsState[cardIndex] = {
+        ...card,
+        spendingLimit: limit
+      }
+
+      return { ...virtualCardsState[cardIndex] }
+    } catch (error) {
+      throw new Error("Failed to update spending limit")
+    }
+  },
+
+  async getTransactionHistory(cardId) {
+    await delay(300)
+    try {
+      // Import transactions here to avoid circular dependency
+      const { default: transactionData } = await import("@/services/mockData/transactions.json")
+      
+      // Filter transactions related to this virtual card
+      const cardTransactions = transactionData.filter(transaction => 
+        transaction.cardId === parseInt(cardId)
+      )
+
+      return cardTransactions.map(transaction => ({ ...transaction }))
+    } catch (error) {
+      throw new Error("Failed to load transaction history")
+    }
   }
 }
 

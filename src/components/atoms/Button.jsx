@@ -20,7 +20,8 @@ const Button = forwardRef(({
 accent: "bg-gradient-to-r from-accent to-orange-500 text-white shadow-lg hover:shadow-xl active:scale-[0.98]",
     success: "bg-gradient-to-r from-success to-green-600 text-white shadow-lg hover:shadow-xl active:scale-[0.98]",
     info: "bg-gradient-to-r from-info to-blue-600 text-white shadow-lg hover:shadow-xl active:scale-[0.98]",
-    warning: "bg-gradient-to-r from-warning to-yellow-600 text-white shadow-lg hover:shadow-xl active:scale-[0.98]"
+    warning: "bg-gradient-to-r from-warning to-yellow-600 text-white shadow-lg hover:shadow-xl active:scale-[0.98]",
+    danger: "bg-gradient-to-r from-error to-red-600 text-white shadow-lg hover:shadow-xl active:scale-[0.98]"
   }
   
   const sizes = {
