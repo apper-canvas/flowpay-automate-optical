@@ -1,3 +1,4 @@
+import React from "react";
 import subscriptionData from "@/services/mockData/subscriptions.json";
 import paymentMethodService from "@/services/api/paymentMethodService";
 import Error from "@/components/ui/Error";
@@ -336,16 +337,17 @@ export const subscriptionService = {
           serviceName: "Dropbox",
           amount: 9.99,
           frequency: "monthly", 
+frequency: "monthly", 
           confidence: 0.87,
           lastSeen: "2024-01-08T00:00:00Z"
         }
       ]
 
       return potentialSubscriptions
-return potentialSubscriptions
     } catch (error) {
       throw new Error("Failed to analyze transactions for subscriptions")
     }
+  },
 
   async getSpendingAlerts() {
     await delay(250)

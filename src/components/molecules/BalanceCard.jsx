@@ -77,7 +77,6 @@ const BalanceCard = ({ wallet, isPrimary = false, onClick }) => {
                 <span className="text-white/80 text-sm font-medium">
                   {wallet.change24h > 0 ? "+" : ""}{wallet.change24h}% (24h)
                 </span>
-              </div>
 </div>
             </div>
             
@@ -85,7 +84,7 @@ const BalanceCard = ({ wallet, isPrimary = false, onClick }) => {
             {wallet.hasSpendingAlert && (
               <div className="absolute top-2 right-2">
                 <div className="w-3 h-3 bg-warning rounded-full animate-pulse" />
-</div>
+              </div>
             )}
           </div>
         </Card>
