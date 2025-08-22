@@ -1,38 +1,39 @@
+import "@/index.css";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
 import React from "react";
-import SplitBillPage from "@/components/pages/SplitBillPage";
-import "@/index.css";
 import transactionsData from "@/services/mockData/transactions.json";
 import contactsData from "@/services/mockData/contacts.json";
 import fundingSourcesData from "@/services/mockData/fundingSources.json";
 import walletsData from "@/services/mockData/wallets.json";
 import virtualCardsData from "@/services/mockData/virtualCards.json";
 import subscriptionsData from "@/services/mockData/subscriptions.json";
-import SupportPage from "@/components/pages/SupportPage";
-import DashboardPage from "@/components/pages/DashboardPage";
+import VirtualCardsPage from "@/components/pages/VirtualCardsPage";
+import P2PTransferPage from "@/components/pages/P2PTransferPage";
 import HistoryPage from "@/components/pages/HistoryPage";
+import SettingsPage from "@/components/pages/SettingsPage";
 import SavedMethodsPage from "@/components/pages/SavedMethodsPage";
+import NotificationsPage from "@/components/pages/NotificationsPage";
+import MorePage from "@/components/pages/MorePage";
+import QRScannerPage from "@/components/pages/QRScannerPage";
+import PaymentLinksPage from "@/components/pages/PaymentLinksPage";
+import AlertsPage from "@/components/pages/AlertsPage";
+import CurrencyExchangePage from "@/components/pages/CurrencyExchangePage";
+import WalletPage from "@/components/pages/WalletPage";
+import Layout from "@/components/pages/Layout";
+import PaymentsPage from "@/components/pages/PaymentsPage";
+import SplitBillPage from "@/components/pages/SplitBillPage";
+import CheckoutPage from "@/components/pages/CheckoutPage";
 import ToolsPage from "@/components/pages/ToolsPage";
 import SettlementsPage from "@/components/pages/SettlementsPage";
-import SubscriptionPage from "@/components/pages/SubscriptionPage";
-import PaymentLinksPage from "@/components/pages/PaymentLinksPage";
-import BusinessPage from "@/components/pages/BusinessPage";
-import CheckoutPage from "@/components/pages/CheckoutPage";
-import AlertsPage from "@/components/pages/AlertsPage";
-import VirtualCardsPage from "@/components/pages/VirtualCardsPage";
-import WalletPage from "@/components/pages/WalletPage";
-import P2PTransferPage from "@/components/pages/P2PTransferPage";
-import SettingsPage from "@/components/pages/SettingsPage";
 import InvoicePage from "@/components/pages/InvoicePage";
-import PaymentsPage from "@/components/pages/PaymentsPage";
-import CurrencyExchangePage from "@/components/pages/CurrencyExchangePage";
+import SupportPage from "@/components/pages/SupportPage";
 import BillingCalendarPage from "@/components/pages/BillingCalendarPage";
-import NotificationsPage from "@/components/pages/NotificationsPage";
-import Layout from "@/components/pages/Layout";
-import MorePage from "@/components/pages/MorePage";
+import DashboardPage from "@/components/pages/DashboardPage";
+import SubscriptionPage from "@/components/pages/SubscriptionPage";
 import SecurityPage from "@/components/pages/SecurityPage";
-import QRScannerPage from "@/components/pages/QRScannerPage";
+import BusinessPage from "@/components/pages/BusinessPage";
+import DisputePage from "@/components/pages/DisputePage";
 function App() {
   return (
     <>
@@ -54,9 +55,11 @@ function App() {
             <Route path="/business/settlements" element={<SettlementsPage />} />
             <Route path="/business/tools" element={<ToolsPage />} />
             <Route path="/business/payment-links" element={<PaymentLinksPage />} />
-            <Route path="/business/invoices" element={<InvoicePage />} />
-<Route path="/more" element={<MorePage />} />
+<Route path="/business/invoices" element={<InvoicePage />} />
+            <Route path="/more" element={<MorePage />} />
             <Route path="/more/security" element={<SecurityPage />} />
+            <Route path="/more/disputes" element={<DisputePage />} />
+            <Route path="/more/disputes/:id" element={<DisputePage />} />
             <Route path="/settings" element={<SettingsPage />} />
             <Route path="/settings/notifications" element={<NotificationsPage />} />
             <Route path="/settings/saved-methods" element={<SavedMethodsPage />} />

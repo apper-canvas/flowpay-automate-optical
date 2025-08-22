@@ -21,8 +21,10 @@ const NotificationsPage = () => {
     maintenance: false,
     subscriptionAlerts: true,
     spendingThresholds: true,
-    autoRenewalWarnings: true,
-    subscriptionCancellation: true
+autoRenewalWarnings: true,
+    subscriptionCancellation: true,
+    disputeUpdates: true,
+    securityAlerts: true
   });
 
   // Load notification settings from localStorage on mount
@@ -114,8 +116,14 @@ const NotificationsPage = () => {
         {
           key: "subscriptionCancellation",
           icon: "XCircle",
-          title: "Cancellation Reminders",
+title: "Cancellation Reminders",
           description: "Remind me to cancel unwanted subscriptions"
+        },
+        {
+          key: "disputeUpdates",
+          icon: "FileText",
+          title: "Dispute Updates",
+          description: "Notify me about dispute case status changes and resolutions"
         }
       ]
     },
@@ -132,8 +140,14 @@ const NotificationsPage = () => {
         {
           key: "newDevice",
           icon: "Smartphone",
-          title: "New Device Login",
+title: "New Device Login",
           description: "Alert when your account is accessed from a new device"
+        },
+        {
+          key: "securityAlerts",
+          icon: "AlertTriangle",
+          title: "Fraud & Security Alerts",
+          description: "Critical security notifications and fraud detection alerts"
         }
       ]
     },
@@ -199,9 +213,11 @@ const NotificationsPage = () => {
       newDevice: true,
       maintenance: false,
       subscriptionAlerts: true,
-      spendingThresholds: true,
+spendingThresholds: true,
       autoRenewalWarnings: true,
-      subscriptionCancellation: true
+      subscriptionCancellation: true,
+      disputeUpdates: true,
+      securityAlerts: true
     };
     setNotifications(defaultSettings);
     localStorage.setItem('notificationSettings', JSON.stringify(defaultSettings));

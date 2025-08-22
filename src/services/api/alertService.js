@@ -1,5 +1,7 @@
-import subscriptionService from "@/services/api/subscriptionService";
 import { format } from "date-fns";
+import React from "react";
+import subscriptionService from "@/services/api/subscriptionService";
+import Error from "@/components/ui/Error";
 
 // Helper function to create delay
 const delay = (ms) => new Promise(resolve => setTimeout(resolve, ms))
@@ -416,11 +418,117 @@ export const alertService = {
         alert.serviceName.toLowerCase().includes(lowercaseQuery)
       )
 
-      return filtered.map(alert => ({ ...alert }))
+return filtered.map(alert => ({ ...alert }))
     } catch (error) {
       throw new Error("Failed to search alerts")
     }
+  },
+
+  async createSecurityAlert(alertData) {
+    await delay(200)
+    try {
+      const securityAlert = {
+        type: alertData.type || 'security_alert',
+        title: alertData.title,
+        message: alertData.message,
+        severity: alertData.severity || 'high',
+        location: alertData.location,
+        deviceType: alertData.deviceType,
+        ipAddress: alertData.ipAddress,
+        amount: alertData.amount,
+        ...alertData
+      }
+
+      return await this.createAlert(securityAlert)
+    } catch (error) {
+      throw new Error("Failed to create security alert: " + error.message)
+    }
+  },
+
+  async createDisputeAlert(disputeData) {
+    await delay(200)
+    try {
+      const disputeAlert = {
+        type: 'dispute_update',
+        title: `Dispute Update - ${disputeData.caseNumber}`,
+        message: disputeData.message,
+        severity: disputeData.status === 'resolved' ? 'low' : 'medium',
+        disputeId: disputeData.disputeId,
+        caseNumber: disputeData.caseNumber,
+        amount: disputeData.amount,
+        status: disputeData.status,
+        ...disputeData
+      }
+
+      return await this.createAlert(disputeAlert)
+    } catch (error) {
+      throw new Error("Failed to create dispute alert: " + error.message)
+    }
+  },
+
+  async getSecurityAlerts() {
+    await delay(200)
+    try {
+      const securityTypes = ['fraud_detected', 'security_alert', 'device_new', 'velocity_alert']
+      const securityAlerts = alertsState.filter(alert => securityTypes.includes(alert.type))
+      return securityAlerts.map(alert => ({ ...alert }))
+    } catch (error) {
+      throw new Error("Failed to load security alerts")
+    }
+  },
+
+  async getDisputeAlerts() {
+    await delay(200)
+    try {
+      const disputeAlerts = alertsState.filter(alert => alert.type === 'dispute_update')
+      return disputeAlerts.map(alert => ({ ...alert }))
+    } catch (error) {
+      throw new Error("Failed to load dispute alerts")
+    }
+  },
+
+  async createFraudAlert(transactionData) {
+    await delay(250)
+    try {
+      const fraudAlert = {
+        type: 'fraud_detected',
+        title: 'Suspicious Activity Detected',
+        message: `Unusual transaction pattern detected${transactionData.location ? ` from ${transactionData.location}` : ''}. Transaction${transactionData.amount ? ` of $${transactionData.amount}` : ''} blocked for your protection.`,
+        severity: 'high',
+        amount: transactionData.amount,
+        currency: transactionData.currency || 'USD',
+        location: transactionData.location,
+        deviceType: transactionData.deviceType,
+        ipAddress: transactionData.ipAddress,
+        merchant: transactionData.merchant,
+        reason: transactionData.reason || 'Suspicious activity pattern',
+        ...transactionData
+      }
+
+      return await this.createAlert(fraudAlert)
+    } catch (error) {
+      throw new Error("Failed to create fraud alert: " + error.message)
+    }
+  },
+
+  async createTransactionLimitAlert(limitData) {
+    await delay(200)
+    try {
+      const limitAlert = {
+        type: 'transaction_limit',
+        title: 'Transaction Limit Exceeded',
+        message: `Transaction of $${limitData.amount} exceeds your ${limitData.limitType} limit of $${limitData.limit}. Transaction has been blocked.`,
+        severity: 'high',
+        amount: limitData.amount,
+        limit: limitData.limit,
+        limitType: limitData.limitType,
+        merchant: limitData.merchant,
+        ...limitData
+      }
+
+      return await this.createAlert(limitAlert)
+    } catch (error) {
+      throw new Error("Failed to create transaction limit alert: " + error.message)
+    }
   }
 }
-
-export default alertService

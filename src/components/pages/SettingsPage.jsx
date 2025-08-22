@@ -143,8 +143,14 @@ disabled: !biometricEnabled,
           icon: "TrendingUp",
           title: "Subscription Analytics",
           description: "View spending patterns and subscription insights",
-          action: () => navigate('/subscriptions')
-}
+action: () => navigate('/subscriptions')
+        },
+        {
+          icon: "FileX",
+          title: "Dispute Center",
+          description: "File and track payment disputes and chargebacks",
+          action: () => navigate('/more/disputes')
+        }
       ]
     },
     {
