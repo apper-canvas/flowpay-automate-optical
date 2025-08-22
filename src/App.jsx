@@ -20,6 +20,7 @@ import SettlementsPage from "@/components/pages/SettlementsPage";
 import BusinessPage from "@/components/pages/BusinessPage";
 import InvoicePage from "@/components/pages/InvoicePage";
 import SupportPage from "@/components/pages/SupportPage";
+import SavedMethodsPage from "@/components/pages/SavedMethodsPage";
 function App() {
   return (
     <>
@@ -39,9 +40,10 @@ function App() {
             <Route path="/business/tools" element={<ToolsPage />} />
             <Route path="/business/payment-links" element={<PaymentLinksPage />} />
             <Route path="/business/invoices" element={<InvoicePage />} />
-            <Route path="/more" element={<MorePage />} />
+<Route path="/more" element={<MorePage />} />
             <Route path="/settings" element={<SettingsPage />} />
 <Route path="/settings/notifications" element={<NotificationsPage />} />
+            <Route path="/settings/saved-methods" element={<SavedMethodsPage />} />
             <Route path="/settings/support" element={<SupportPage />} />
             <Route path="/virtual-cards" element={<VirtualCardsPage />} />
           </Route>

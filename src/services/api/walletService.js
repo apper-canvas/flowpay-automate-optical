@@ -142,9 +142,86 @@ async getFundingSources() {
       return fundingSourceData.map(fs => ({ ...fs }))
     } catch (error) {
       throw new Error("Failed to load funding sources")
+}
+  },
+
+  // Payment Method Management
+  async updatePaymentMethodAlias(id, alias) {
+    await delay(300)
+    try {
+      const methodIndex = fundingSourceData.findIndex(fs => fs.Id === parseInt(id))
+      if (methodIndex === -1) {
+        throw new Error("Payment method not found")
+      }
+      
+      fundingSourceData[methodIndex] = {
+        ...fundingSourceData[methodIndex],
+        alias: alias || fundingSourceData[methodIndex].name
+      }
+      
+      return { ...fundingSourceData[methodIndex] }
+    } catch (error) {
+      throw new Error("Failed to update payment method alias")
     }
   },
 
+  async setDefaultPaymentMethod(id) {
+    await delay(350)
+    try {
+      // Remove default from all methods
+      fundingSourceData.forEach(fs => fs.isDefault = false)
+      
+      // Set new default
+      const methodIndex = fundingSourceData.findIndex(fs => fs.Id === parseInt(id))
+      if (methodIndex === -1) {
+        throw new Error("Payment method not found")
+      }
+      
+      fundingSourceData[methodIndex].isDefault = true
+      
+      return fundingSourceData.map(fs => ({ ...fs }))
+    } catch (error) {
+      throw new Error("Failed to set default payment method")
+    }
+  },
+
+  async deletePaymentMethod(id) {
+    await delay(400)
+    try {
+      const methodIndex = fundingSourceData.findIndex(fs => fs.Id === parseInt(id))
+      if (methodIndex === -1) {
+        throw new Error("Payment method not found")
+      }
+      
+      if (fundingSourceData[methodIndex].isDefault && fundingSourceData.length > 1) {
+        throw new Error("Cannot delete default payment method. Please set another as default first.")
+      }
+      
+      const deletedMethod = fundingSourceData.splice(methodIndex, 1)[0]
+      return { ...deletedMethod }
+    } catch (error) {
+      throw new Error("Failed to delete payment method")
+    }
+  },
+
+  async getPaymentMethodUsageStats(id) {
+    await delay(250)
+    try {
+      const method = fundingSourceData.find(fs => fs.Id === parseInt(id))
+      if (!method) {
+        throw new Error("Payment method not found")
+      }
+      
+      return {
+        ...method,
+        averageTransactionAmount: method.usageCount > 0 ? method.totalSpent / method.usageCount : 0,
+        monthlyTrend: method.monthlyUsage || [],
+        riskScore: method.usageCount > 10 ? "low" : method.usageCount > 5 ? "medium" : "high"
+      }
+    } catch (error) {
+      throw new Error("Failed to load payment method statistics")
+    }
+  },
   async getFilteredTransactions(transactions, filters) {
     await delay(100) // Small delay for smooth UX
     try {

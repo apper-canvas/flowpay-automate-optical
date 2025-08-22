@@ -3,32 +3,76 @@
     "Id": 1,
     "type": "bank",
     "name": "Chase Checking",
+    "alias": "Primary Bank",
     "lastFour": "4521",
     "icon": "Building2",
-    "isDefault": true
+    "isDefault": true,
+    "usageCount": 42,
+    "totalSpent": 2845.30,
+    "lastUsed": "2024-01-15T14:32:00Z",
+    "addedDate": "2023-08-15T10:00:00Z",
+    "isActive": true,
+    "monthlyUsage": [
+      { "month": "Jan 2024", "transactions": 8, "amount": 456.78 },
+      { "month": "Dec 2023", "transactions": 12, "amount": 789.45 },
+      { "month": "Nov 2023", "transactions": 6, "amount": 234.67 }
+    ]
   },
   {
     "Id": 2,
     "type": "card",
     "name": "Visa Debit Card",
+    "alias": "Daily Spending",
     "lastFour": "8934",
     "icon": "CreditCard",
-    "isDefault": false
+    "isDefault": false,
+    "usageCount": 28,
+    "totalSpent": 1567.89,
+    "lastUsed": "2024-01-14T09:15:00Z",
+    "addedDate": "2023-09-20T16:30:00Z",
+    "isActive": true,
+    "monthlyUsage": [
+      { "month": "Jan 2024", "transactions": 5, "amount": 234.56 },
+      { "month": "Dec 2023", "transactions": 9, "amount": 456.78 },
+      { "month": "Nov 2023", "transactions": 4, "amount": 123.45 }
+    ]
   },
   {
     "Id": 3,
     "type": "bank",
     "name": "Wells Fargo Savings",
+    "alias": "Emergency Fund",
     "lastFour": "7268",
     "icon": "Building2",
-    "isDefault": false
+    "isDefault": false,
+    "usageCount": 15,
+    "totalSpent": 3200.00,
+    "lastUsed": "2024-01-10T11:45:00Z",
+    "addedDate": "2023-07-10T14:20:00Z",
+    "isActive": true,
+    "monthlyUsage": [
+      { "month": "Jan 2024", "transactions": 2, "amount": 1200.00 },
+      { "month": "Dec 2023", "transactions": 1, "amount": 800.00 },
+      { "month": "Nov 2023", "transactions": 3, "amount": 500.00 }
+    ]
   },
   {
     "Id": 4,
     "type": "card",
     "name": "American Express",
+    "alias": "Business Expenses",
     "lastFour": "1009",
     "icon": "CreditCard",
-    "isDefault": false
+    "isDefault": false,
+    "usageCount": 35,
+    "totalSpent": 4892.15,
+    "lastUsed": "2024-01-12T16:20:00Z",
+    "addedDate": "2023-06-05T12:15:00Z",
+    "isActive": true,
+    "monthlyUsage": [
+      { "month": "Jan 2024", "transactions": 7, "amount": 892.15 },
+      { "month": "Dec 2023", "transactions": 11, "amount": 1456.78 },
+      { "month": "Nov 2023", "transactions": 8, "amount": 967.34 }
+    ]
   }
 ]
