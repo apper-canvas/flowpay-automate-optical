@@ -18,9 +18,10 @@ import PaymentsPage from "@/components/pages/PaymentsPage";
 import ToolsPage from "@/components/pages/ToolsPage";
 import SettlementsPage from "@/components/pages/SettlementsPage";
 import BusinessPage from "@/components/pages/BusinessPage";
-import InvoicePage from "@/components/pages/InvoicePage";
-import SupportPage from "@/components/pages/SupportPage";
-import SavedMethodsPage from "@/components/pages/SavedMethodsPage";
+import InvoicePage from "@/components/pages/InvoicePage"
+import SupportPage from "@/components/pages/SupportPage"
+import SavedMethodsPage from "@/components/pages/SavedMethodsPage"
+import SubscriptionPage from "@/components/pages/SubscriptionPage"
 function App() {
   return (
     <>
@@ -44,7 +45,8 @@ function App() {
             <Route path="/settings" element={<SettingsPage />} />
 <Route path="/settings/notifications" element={<NotificationsPage />} />
             <Route path="/settings/saved-methods" element={<SavedMethodsPage />} />
-            <Route path="/settings/support" element={<SupportPage />} />
+<Route path="/settings/support" element={<SupportPage />} />
+            <Route path="/subscriptions" element={<SubscriptionPage />} />
             <Route path="/virtual-cards" element={<VirtualCardsPage />} />
           </Route>
         </Routes>

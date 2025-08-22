@@ -1,4 +1,6 @@
-import fundingSourceData from "@/services/mockData/fundingSources.json"
+import React from "react";
+import fundingSourceData from "@/services/mockData/fundingSources.json";
+import Error from "@/components/ui/Error";
 
 // Helper function to create delay
 const delay = (ms) => new Promise(resolve => setTimeout(resolve, ms))
@@ -225,7 +227,92 @@ function updateMonthlyUsage(currentUsage, month, amount) {
     return [
       { month: monthYear, transactions: 1, amount },
       ...currentUsage.slice(0, 11) // Keep only last 12 months
-    ]
+]
+  }
+}
+
+export const paymentMethodServiceExtended = {
+  async getPaymentMethodsForSubscriptions() {
+    await delay(200)
+    try {
+      // Return active payment methods suitable for subscriptions
+      const suitableMethods = paymentMethodsState.filter(m => 
+        m.isActive && (m.type === "card" || m.type === "bank")
+      )
+      return suitableMethods.map(method => ({ ...method }))
+    } catch (error) {
+      throw new Error("Failed to load payment methods for subscriptions")
+    }
+  },
+
+  async assignPaymentMethodToSubscription(subscriptionId, paymentMethodId) {
+    await delay(300)
+    try {
+      const method = paymentMethodsState.find(m => m.Id === parseInt(paymentMethodId))
+      if (!method) {
+        throw new Error("Payment method not found")
+      }
+      
+      if (!method.isActive) {
+        throw new Error("Cannot assign inactive payment method to subscription")
+      }
+      
+      // Update subscription assignment count
+      const methodIndex = paymentMethodsState.findIndex(m => m.Id === parseInt(paymentMethodId))
+      paymentMethodsState[methodIndex] = {
+        ...method,
+        subscriptionCount: (method.subscriptionCount || 0) + 1,
+        lastSubscriptionAssignment: new Date().toISOString()
+      }
+      
+      return { 
+        success: true, 
+        paymentMethod: { ...paymentMethodsState[methodIndex] },
+        subscriptionId: parseInt(subscriptionId)
+      }
+    } catch (error) {
+      throw new Error("Failed to assign payment method to subscription: " + error.message)
+    }
+  },
+
+  async removePaymentMethodFromSubscription(subscriptionId, paymentMethodId) {
+    await delay(300)
+    try {
+      const methodIndex = paymentMethodsState.findIndex(m => m.Id === parseInt(paymentMethodId))
+      if (methodIndex === -1) {
+        throw new Error("Payment method not found")
+      }
+      
+      const method = paymentMethodsState[methodIndex]
+      paymentMethodsState[methodIndex] = {
+        ...method,
+        subscriptionCount: Math.max((method.subscriptionCount || 1) - 1, 0)
+      }
+      
+      return { 
+        success: true, 
+        subscriptionId: parseInt(subscriptionId),
+        paymentMethodId: parseInt(paymentMethodId)
+      }
+    } catch (error) {
+      throw new Error("Failed to remove payment method from subscription: " + error.message)
+    }
+  },
+
+  async getSubscriptionPaymentMethods(subscriptionIds) {
+    await delay(250)
+    try {
+      const methods = paymentMethodsState.filter(m => 
+        m.subscriptionCount && m.subscriptionCount > 0
+      )
+      
+      return methods.map(method => ({
+        ...method,
+        assignedSubscriptions: subscriptionIds.filter(() => Math.random() > 0.5) // Mock assignment
+      }))
+    } catch (error) {
+      throw new Error("Failed to load subscription payment methods")
+    }
   }
 }
 

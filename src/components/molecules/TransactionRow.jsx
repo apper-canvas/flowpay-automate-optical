@@ -18,10 +18,12 @@ const getTransactionIcon = (type) => {
         return "Send"
       case "p2p_received":
         return "UserPlus"
-      case "virtual_card_payment":
+case "virtual_card_payment":
         return "CreditCard"
       case "checkout_payment":
         return "ShoppingBag"
+      case "subscription":
+        return "Repeat"
       default:
         return "DollarSign"
     }
