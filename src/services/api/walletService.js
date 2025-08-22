@@ -311,5 +311,89 @@ throw new Error("Failed to send P2P transfer")
     } catch (error) {
       throw new Error("Failed to process currency exchange")
     }
+},
+
+  // Business transaction methods
+  async getBusinessTransactions(limit) {
+    await delay(250)
+    try {
+      const businessTransactions = transactionsState.filter(t => 
+        t.type === "business_payment" || t.type === "business_refund"
+      )
+      
+      const transactions = limit 
+        ? businessTransactions.slice(0, limit)
+        : businessTransactions
+        
+      return transactions.map(t => ({ ...t }))
+    } catch (error) {
+      throw new Error("Failed to load business transactions")
+    }
+  },
+
+  async getBusinessMetrics() {
+    await delay(300)
+    try {
+      const businessTransactions = transactionsState.filter(t => 
+        t.type === "business_payment" || t.type === "business_refund"
+      )
+      
+      const today = new Date().toISOString().split('T')[0]
+      const todayTransactions = businessTransactions.filter(t => 
+        t.timestamp.startsWith(today)
+      )
+      
+      const todaySales = todayTransactions
+        .filter(t => t.type === "business_payment" && t.status === "completed")
+        .reduce((sum, t) => sum + Math.abs(t.amount), 0)
+      
+      const pendingSettlements = businessTransactions
+        .filter(t => t.status === "pending")
+        .reduce((sum, t) => sum + Math.abs(t.amount), 0)
+      
+      const completedTransactions = businessTransactions.filter(t => t.status === "completed")
+      const successRate = businessTransactions.length > 0 
+        ? (completedTransactions.length / businessTransactions.length) * 100 
+        : 0
+      
+      return {
+        todaySales,
+        todayTransactions: todayTransactions.length,
+        pendingSettlements,
+        monthlyRevenue: businessTransactions
+          .filter(t => t.type === "business_payment" && t.status === "completed")
+          .reduce((sum, t) => sum + Math.abs(t.amount), 0),
+        successRate: Math.round(successRate * 10) / 10,
+        topPaymentMethods: [
+          { method: "Credit Card", percentage: 45.2, amount: 12500.50 },
+          { method: "Debit Card", percentage: 28.6, amount: 7940.25 },
+          { method: "Bank Transfer", percentage: 16.8, amount: 4680.00 },
+          { method: "PayPal", percentage: 9.4, amount: 2619.25 }
+        ],
+        revenueChart: {
+          daily: [
+            { date: "Jan 15", revenue: todaySales },
+            { date: "Jan 14", revenue: 1875.30 },
+            { date: "Jan 13", revenue: 2200.45 },
+            { date: "Jan 12", revenue: 1950.80 },
+            { date: "Jan 11", revenue: 2750.20 },
+            { date: "Jan 10", revenue: 2100.65 },
+            { date: "Jan 09", revenue: 1680.90 }
+          ],
+          weekly: [
+            { period: "Week 3", revenue: 18500.75 },
+            { period: "Week 2", revenue: 16200.30 },
+            { period: "Week 1", revenue: 14050.45 }
+          ],
+          monthly: [
+            { period: "Jan 2024", revenue: 48750.00 },
+            { period: "Dec 2023", revenue: 45200.80 },
+            { period: "Nov 2023", revenue: 42300.65 }
+          ]
+        }
+      }
+    } catch (error) {
+      throw new Error("Failed to load business metrics")
+    }
   }
 }
