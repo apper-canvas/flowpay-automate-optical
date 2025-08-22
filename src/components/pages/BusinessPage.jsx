@@ -1,16 +1,16 @@
-import { useState, useEffect } from "react"
-import { useNavigate } from "react-router-dom"
-import { motion } from "framer-motion"
-import { toast } from "react-toastify"
-import BusinessMetrics from "@/components/molecules/BusinessMetrics"
-import BusinessChart from "@/components/molecules/BusinessChart"
-import BusinessQuickActions from "@/components/organisms/BusinessQuickActions"
-import BusinessTransactionList from "@/components/organisms/BusinessTransactionList"
-import Card from "@/components/atoms/Card"
-import ApperIcon from "@/components/ApperIcon"
-import Loading from "@/components/ui/Loading"
-import Error from "@/components/ui/Error"
-import { walletService } from "@/services/api/walletService"
+import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { motion } from "framer-motion";
+import { toast } from "react-toastify";
+import { walletService } from "@/services/api/walletService";
+import ApperIcon from "@/components/ApperIcon";
+import Card from "@/components/atoms/Card";
+import BusinessMetrics from "@/components/molecules/BusinessMetrics";
+import BusinessChart from "@/components/molecules/BusinessChart";
+import BusinessTransactionList from "@/components/organisms/BusinessTransactionList";
+import BusinessQuickActions from "@/components/organisms/BusinessQuickActions";
+import Loading from "@/components/ui/Loading";
+import Error from "@/components/ui/Error";
 const BusinessPage = () => {
   const navigate = useNavigate()
   const [metrics, setMetrics] = useState(null)
@@ -169,13 +169,32 @@ const BusinessPage = () => {
                     Invoice Templates
                   </h4>
                   <p className="text-sm text-gray-600">
-                    Generate professional invoices
+Generate professional invoices
+                  </p>
+                </div>
+              </div>
+            </Card>
+            
+            <Card
+              padding="lg"
+              className="transition-all duration-200 cursor-pointer hover:shadow-lg hover:scale-[1.02] active:scale-[0.98]"
+              onClick={() => navigate('/business/settlements')}
+            >
+              <div className="flex items-center space-x-4">
+                <div className="w-12 h-12 rounded-xl bg-success/10 flex items-center justify-center">
+                  <ApperIcon name="Banknote" size={24} className="text-success" />
+                </div>
+                <div>
+                  <h4 className="font-display font-semibold text-gray-900 mb-1">
+                    Settlement Tracking
+                  </h4>
+                  <p className="text-sm text-gray-600">
+                    Monitor payouts and settlements
                   </p>
                 </div>
               </div>
             </Card>
           </div>
-        </motion.div>
 
         {/* Revenue Analytics Chart */}
         <motion.div

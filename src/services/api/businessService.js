@@ -1,4 +1,6 @@
-import transactionData from "@/services/mockData/transactions.json"
+import React from "react";
+import transactionData from "@/services/mockData/transactions.json";
+import Error from "@/components/ui/Error";
 
 // Helper function to create delay
 const delay = (ms) => new Promise(resolve => setTimeout(resolve, ms))
@@ -263,7 +265,200 @@ throw new Error("Failed to generate report")
 
       return { ...qrCode }
     } catch (error) {
-      throw new Error("Failed to generate QR code")
+throw new Error("Failed to generate QR code")
+    }
+  },
+
+  // Settlement-related mock data and methods
+  async getSettlementMetrics() {
+    await delay(300)
+    try {
+      const metrics = {
+        totalPending: 12450.75,
+        nextSettlementDate: "2024-01-17T09:00:00Z",
+        totalFees: 892.35,
+        settlementFrequency: "daily",
+        lastSettlementDate: "2024-01-15T09:00:00Z",
+        lastSettlementAmount: 8750.50
+      }
+      return { ...metrics }
+    } catch (error) {
+      throw new Error("Failed to load settlement metrics")
+    }
+  },
+
+  async getPendingPayouts() {
+    await delay(350)
+    try {
+      const pendingPayouts = [
+        {
+          Id: "PAYOUT-001",
+          description: "Daily Settlement - Jan 15",
+          amount: 2450.75,
+          fee: 58.75,
+          currency: "USD",
+          transactionCount: 23,
+          expectedDate: "2024-01-16T09:00:00Z",
+          status: "pending",
+          createdAt: "2024-01-15T23:59:00Z"
+        },
+        {
+          Id: "PAYOUT-002", 
+          description: "Business Payments Batch",
+          amount: 5200.30,
+          fee: 124.80,
+          currency: "USD",
+          transactionCount: 45,
+          expectedDate: "2024-01-17T09:00:00Z",
+          status: "processing",
+          createdAt: "2024-01-15T18:30:00Z"
+        },
+        {
+          Id: "PAYOUT-003",
+          description: "Refund Processing",
+          amount: 1850.25,
+          fee: 44.40,
+          currency: "USD", 
+          transactionCount: 12,
+          expectedDate: "2024-01-18T09:00:00Z",
+          status: "pending",
+          createdAt: "2024-01-15T16:45:00Z"
+        },
+        {
+          Id: "PAYOUT-004",
+          description: "Weekend Settlement",
+          amount: 2949.45,
+          fee: 70.80,
+          currency: "USD",
+          transactionCount: 31,
+          expectedDate: "2024-01-19T09:00:00Z",
+          status: "pending",
+          createdAt: "2024-01-15T14:20:00Z"
+        }
+      ]
+      return pendingPayouts.map(p => ({ ...p }))
+    } catch (error) {
+      throw new Error("Failed to load pending payouts")
+    }
+  },
+
+  async getSettlementSchedule() {
+    await delay(400)
+    try {
+      const settlements = [
+        {
+          Id: "SETTLE-001",
+          description: "Daily Settlement - Jan 15",
+          settlementDate: "2024-01-15T09:00:00Z",
+          grossAmount: 8750.50,
+          fees: 210.00,
+          netAmount: 8540.50,
+          currency: "USD",
+          transactionCount: 78,
+          status: "completed",
+          bankAccount: "****1234"
+        },
+        {
+          Id: "SETTLE-002",
+          description: "Weekend Batch Settlement", 
+          settlementDate: "2024-01-16T09:00:00Z",
+          grossAmount: 12450.75,
+          fees: 298.80,
+          netAmount: 12151.95,
+          currency: "USD",
+          transactionCount: 96,
+          status: "processing",
+          bankAccount: "****1234"
+        },
+        {
+          Id: "SETTLE-003",
+          description: "Business Payment Settlement",
+          settlementDate: "2024-01-17T09:00:00Z", 
+          grossAmount: 5200.30,
+          fees: 124.80,
+          netAmount: 5075.50,
+          currency: "USD",
+          transactionCount: 45,
+          status: "pending",
+          bankAccount: "****1234"
+        },
+        {
+          Id: "SETTLE-004",
+          description: "Recurring Payment Settlement",
+          settlementDate: "2024-01-18T09:00:00Z",
+          grossAmount: 3850.25,
+          fees: 92.40,
+          netAmount: 3757.85,
+          currency: "USD",
+          transactionCount: 34,
+          status: "pending", 
+          bankAccount: "****1234"
+        },
+        {
+          Id: "SETTLE-005",
+          description: "Special Event Settlement",
+          settlementDate: "2024-01-19T09:00:00Z",
+          grossAmount: 15750.80,
+          fees: 378.00,
+          netAmount: 15372.80,
+          currency: "USD",
+          transactionCount: 125,
+          status: "pending",
+          bankAccount: "****1234"
+        }
+      ]
+      return settlements.map(s => ({ ...s }))
+    } catch (error) {
+      throw new Error("Failed to load settlement schedule")
+    }
+  },
+
+  async getFeeBreakdown() {
+    await delay(300)
+    try {
+      const feeBreakdown = {
+        summary: {
+          totalVolume: 145250.85,
+          totalFees: 3486.02,
+          averageRate: 2.4,
+          netReceived: 141764.83,
+          period: "Last 30 Days"
+        },
+        categories: [
+          {
+            name: "Processing Fees",
+            amount: 2105.25,
+            percentage: 60.4,
+            description: "Standard transaction processing"
+          },
+          {
+            name: "Network Fees", 
+            amount: 623.48,
+            percentage: 17.9,
+            description: "Payment network charges"
+          },
+          {
+            name: "Risk Assessment",
+            amount: 418.65,
+            percentage: 12.0,
+            description: "Fraud protection and risk analysis"
+          },
+          {
+            name: "International Fees",
+            amount: 338.64,
+            percentage: 9.7,
+            description: "Cross-border transaction fees"
+          }
+        ],
+        monthlyTrend: [
+          { month: "Dec 2023", fees: 3280.45, volume: 138520.30 },
+          { month: "Jan 2024", fees: 3486.02, volume: 145250.85 }
+        ]
+      }
+      return { ...feeBreakdown }
+    } catch (error) {
+      throw new Error("Failed to load fee breakdown")
+} catch (error) {
+      throw new Error("Failed to load fee breakdown")
     }
   }
-}

@@ -8,6 +8,7 @@ import CurrencyExchangePage from "@/components/pages/CurrencyExchangePage"
 import QRScannerPage from "@/components/pages/QRScannerPage"
 import HistoryPage from "@/components/pages/HistoryPage"
 import BusinessPage from "@/components/pages/BusinessPage"
+import SettlementsPage from "@/components/pages/SettlementsPage"
 import ToolsPage from "@/components/pages/ToolsPage"
 import MorePage from "@/components/pages/MorePage"
 import SettingsPage from "@/components/pages/SettingsPage"
@@ -23,9 +24,10 @@ function App() {
             <Route path="/payments" element={<PaymentsPage />} />
             <Route path="/payments/transfer" element={<P2PTransferPage />} />
             <Route path="/payments/exchange" element={<CurrencyExchangePage />} />
-            <Route path="/payments/qr-scanner" element={<QRScannerPage />} />
+<Route path="/payments/qr-scanner" element={<QRScannerPage />} />
             <Route path="/history" element={<HistoryPage />} />
-<Route path="/business" element={<BusinessPage />} />
+            <Route path="/business" element={<BusinessPage />} />
+            <Route path="/business/settlements" element={<SettlementsPage />} />
             <Route path="/business/tools" element={<ToolsPage />} />
             <Route path="/more" element={<MorePage />} />
             <Route path="/settings" element={<SettingsPage />} />
