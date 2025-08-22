@@ -1,13 +1,15 @@
-import { useState } from "react"
-import { motion } from "framer-motion"
-import { toast } from "react-toastify"
-import Card from "@/components/atoms/Card"
-import Button from "@/components/atoms/Button"
-import Input from "@/components/atoms/Input"
-import ApperIcon from "@/components/ApperIcon"
-import { businessService } from "@/services/api/businessService"
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { motion } from "framer-motion";
+import { toast } from "react-toastify";
+import { businessService } from "@/services/api/businessService";
+import ApperIcon from "@/components/ApperIcon";
+import Button from "@/components/atoms/Button";
+import Card from "@/components/atoms/Card";
+import Input from "@/components/atoms/Input";
 
 const BusinessQuickActions = ({ onActionComplete }) => {
+  const navigate = useNavigate()
   const [loading, setLoading] = useState("")
   const [showRefundModal, setShowRefundModal] = useState(false)
   const [showInvoiceModal, setShowInvoiceModal] = useState(false)
@@ -199,12 +201,12 @@ const BusinessQuickActions = ({ onActionComplete }) => {
       bgColor: "bg-info/10",
       onClick: () => setShowInvoiceModal(true)
     },
-    {
+{
       icon: "Link",
       label: "Payment Link",
       color: "text-success",
       bgColor: "bg-success/10",
-      onClick: () => setShowPaymentLinkModal(true)
+      onClick: () => navigate('/business/payment-links')
     },
     {
       icon: "Download",

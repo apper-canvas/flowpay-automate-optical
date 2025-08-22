@@ -517,7 +517,184 @@ throw new Error("Failed to load fee breakdown")
 
       return { ...report }
     } catch (error) {
-      throw new Error(`Failed to generate ${reportType} report`)
+throw new Error(`Failed to generate ${reportType} report`)
+    }
+  },
+
+  // Payment link management
+  async getPaymentLinks() {
+    await delay(400)
+    try {
+      // Mock payment links data
+      const paymentLinks = [
+        {
+          Id: "LINK-1704281234567",
+          amount: 150.00,
+          currency: "USD",
+          description: "Product Purchase",
+          url: "https://pay.flowpay.com/LINK-1704281234567",
+          status: "active",
+          createdAt: "2024-01-15T10:30:00Z",
+          expiresAt: "2024-01-16T10:30:00Z",
+          clicks: 12,
+          payments: 3,
+          totalCollected: 450.00
+        },
+        {
+          Id: "LINK-1704267890123",
+          amount: 75.50,
+          currency: "USD",
+          description: "Service Payment",
+          url: "https://pay.flowpay.com/LINK-1704267890123",
+          status: "used",
+          createdAt: "2024-01-14T14:20:00Z",
+          expiresAt: "2024-01-15T14:20:00Z",
+          clicks: 8,
+          payments: 1,
+          totalCollected: 75.50
+        },
+        {
+          Id: "LINK-1704254567890",
+          amount: 200.00,
+          currency: "USD",
+          description: "Invoice #INV-001",
+          url: "https://pay.flowpay.com/LINK-1704254567890",
+          status: "expired",
+          createdAt: "2024-01-13T16:45:00Z",
+          expiresAt: "2024-01-14T16:45:00Z",
+          clicks: 5,
+          payments: 0,
+          totalCollected: 0.00
+        },
+        {
+          Id: "LINK-1704241234567",
+          amount: 89.99,
+          currency: "USD",
+          description: "Monthly Subscription",
+          url: "https://pay.flowpay.com/LINK-1704241234567",
+          status: "active",
+          createdAt: "2024-01-12T12:15:00Z",
+          expiresAt: "2024-01-19T12:15:00Z",
+          clicks: 25,
+          payments: 8,
+          totalCollected: 719.92
+        },
+        {
+          Id: "LINK-1704227890123",
+          amount: 350.00,
+          currency: "USD",
+          description: "Consulting Services",
+          url: "https://pay.flowpay.com/LINK-1704227890123",
+          status: "inactive",
+          createdAt: "2024-01-11T09:30:00Z",
+          expiresAt: "2024-01-18T09:30:00Z",
+          clicks: 3,
+          payments: 0,
+          totalCollected: 0.00
+        }
+      ]
+
+      return paymentLinks.map(link => ({ ...link }))
+    } catch (error) {
+      throw new Error("Failed to load payment links")
+    }
+  },
+
+  async getPaymentLinkAnalytics() {
+    await delay(300)
+    try {
+      const analytics = {
+        totalLinks: 12,
+        activeLinks: 7,
+        totalClicks: 156,
+        totalPayments: 28,
+        totalCollected: 4250.85,
+        conversionRate: 17.9,
+        topPerformingLinks: [
+          {
+            id: "LINK-1704241234567",
+            description: "Monthly Subscription",
+            clicks: 25,
+            payments: 8,
+            conversionRate: 32.0,
+            revenue: 719.92
+          },
+          {
+            id: "LINK-1704281234567", 
+            description: "Product Purchase",
+            clicks: 12,
+            payments: 3,
+            conversionRate: 25.0,
+            revenue: 450.00
+          }
+        ],
+        recentActivity: [
+          {
+            type: "payment",
+            linkId: "LINK-1704281234567",
+            amount: 150.00,
+            timestamp: "2024-01-15T14:30:00Z"
+          },
+          {
+            type: "click",
+            linkId: "LINK-1704241234567",
+            timestamp: "2024-01-15T13:45:00Z"
+          }
+        ]
+      }
+
+      return { ...analytics }
+    } catch (error) {
+      throw new Error("Failed to load payment link analytics")
+    }
+  },
+
+  async updatePaymentLinkStatus(linkId, status) {
+    await delay(300)
+    try {
+      // In a real app, this would update the database
+      const updatedLink = {
+        Id: linkId,
+        status: status,
+        updatedAt: new Date().toISOString()
+      }
+
+      return { ...updatedLink }
+    } catch (error) {
+      throw new Error("Failed to update payment link status")
+    }
+  },
+
+  async getPaymentLinkDetails(linkId) {
+    await delay(250)
+    try {
+      const linkDetails = {
+        Id: linkId,
+        analytics: {
+          totalClicks: 12,
+          uniqueClicks: 8,
+          totalPayments: 3,
+          successfulPayments: 3,
+          failedPayments: 0,
+          conversionRate: 25.0,
+          revenue: 450.00,
+          averagePaymentTime: "2.3 minutes",
+          topSources: [
+            { source: "Direct Link", clicks: 7 },
+            { source: "Email", clicks: 3 },
+            { source: "Social Media", clicks: 2 }
+          ],
+          clickHistory: [
+            { date: "2024-01-15", clicks: 4, payments: 1 },
+            { date: "2024-01-14", clicks: 5, payments: 2 },
+            { date: "2024-01-13", clicks: 3, payments: 0 }
+          ]
+        }
+      }
+
+      return { ...linkDetails }
+    } catch (error) {
+      throw new Error("Failed to load payment link details")
     }
   }
 }

@@ -3,6 +3,7 @@ import { ToastContainer } from "react-toastify";
 import DashboardPage from "@/components/pages/DashboardPage";
 import React from "react";
 import P2PTransferPage from "@/components/pages/P2PTransferPage";
+import PaymentLinksPage from "@/components/pages/PaymentLinksPage";
 import HistoryPage from "@/components/pages/HistoryPage";
 import SettingsPage from "@/components/pages/SettingsPage";
 import NotificationsPage from "@/components/pages/NotificationsPage";
@@ -23,15 +24,16 @@ function App() {
 <Routes>
 <Route path="/" element={<Layout />}>
             <Route index element={<WalletPage />} />
+<Route index element={<WalletPage />} />
             <Route path="/dashboard" element={<DashboardPage />} />
             <Route path="/payments" element={<PaymentsPage />} />
             <Route path="/payments/transfer" element={<P2PTransferPage />} />
             <Route path="/payments/exchange" element={<CurrencyExchangePage />} />
-<Route path="/payments/qr-scanner" element={<QRScannerPage />} />
             <Route path="/history" element={<HistoryPage />} />
             <Route path="/business" element={<BusinessPage />} />
-            <Route path="/business/settlements" element={<SettlementsPage />} />
+<Route path="/business/settlements" element={<SettlementsPage />} />
             <Route path="/business/tools" element={<ToolsPage />} />
+            <Route path="/business/payment-links" element={<PaymentLinksPage />} />
             <Route path="/more" element={<MorePage />} />
             <Route path="/settings" element={<SettingsPage />} />
             <Route path="/settings/notifications" element={<NotificationsPage />} />

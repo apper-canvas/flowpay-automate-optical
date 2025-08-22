@@ -50,15 +50,14 @@ const ToolsPage = () => {
           <QRCodeGeneratorCard />
         </motion.div>
 
-        {/* Payment Link Creator */}
+{/* Payment Link Creator */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.2 }}
         >
-          <PaymentLinkCard />
+          <PaymentLinkCard onNavigate={() => navigate('/business/payment-links')} />
         </motion.div>
-
         {/* Invoice Templates */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}

@@ -135,10 +135,10 @@ const BusinessPage = () => {
               </div>
             </Card>
             
-            <Card 
+<Card 
               padding="lg"
               className="transition-all duration-200 cursor-pointer hover:shadow-lg hover:scale-[1.02] active:scale-[0.98]"
-              onClick={() => navigate('/business/tools')}
+              onClick={() => navigate('/business/payment-links')}
             >
               <div className="flex items-center space-x-4">
                 <div className="w-12 h-12 rounded-xl bg-success/10 flex items-center justify-center">
@@ -154,7 +154,6 @@ const BusinessPage = () => {
                 </div>
               </div>
             </Card>
-            
             <Card 
               padding="lg"
               className="transition-all duration-200 cursor-pointer hover:shadow-lg hover:scale-[1.02] active:scale-[0.98]"
