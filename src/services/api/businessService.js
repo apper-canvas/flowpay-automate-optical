@@ -1,9 +1,7 @@
-import React from "react";
 import transactionData from "@/services/mockData/transactions.json";
-import Error from "@/components/ui/Error";
 
 // Helper function to create delay
-const delay = (ms) => new Promise(resolve => setTimeout(resolve, ms))
+const delay = (ms) => new Promise(resolve => setTimeout(resolve, ms));
 
 // Business-specific mock data
 const businessTransactions = [
@@ -16,15 +14,15 @@ const businessTransactions = [
     customerEmail: "john.smith@email.com",
     paymentMethod: "Credit Card",
     timestamp: "2024-01-15T14:30:00Z",
-    status: "completed",
-    refundable: true,
-    invoiceId: "INV-2024-001"
-  },
-  {
-    Id: 102,
-    type: "business_payment",
-    amount: 156.80,
-    currency: "USD",
+status: "completed",
+refundable: true,
+invoiceId: "INV-2024-001"
+},
+{
+Id: 102,
+type: "business_payment",
+amount: 156.80,
+currency: "USD",
     customer: "Sarah Johnson",
     customerEmail: "sarah.j@email.com",
     paymentMethod: "Debit Card",
@@ -235,9 +233,9 @@ export const businessService = {
         fileName: `${reportType}-report-${new Date().toISOString().split('T')[0]}.pdf`
       }
 
-      return { ...report }
+return { ...report }
     } catch (error) {
-throw new Error("Failed to generate report")
+      throw new Error("Failed to generate report")
     }
   },
 
@@ -263,9 +261,9 @@ throw new Error("Failed to generate report")
         expiresAt: new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString() // 24 hours
       }
 
-      return { ...qrCode }
+return { ...qrCode }
     } catch (error) {
-throw new Error("Failed to generate QR code")
+      throw new Error("Failed to generate QR code")
     }
   },
 
@@ -450,14 +448,14 @@ throw new Error("Failed to generate QR code")
             description: "Cross-border transaction fees"
           }
         ],
-        monthlyTrend: [
-          { month: "Dec 2023", fees: 3280.45, volume: 138520.30 },
-          { month: "Jan 2024", fees: 3486.02, volume: 145250.85 }
+monthlyTrend: [
+{ month: "Dec 2023", fees: 3280.45, volume: 138520.30 },
+{ month: "Jan 2024", fees: 3486.02, volume: 145250.85 }
 ]
-      };
+};
       return { ...feeBreakdown }
     } catch (error) {
-throw new Error("Failed to load fee breakdown")
+      throw new Error("Failed to load fee breakdown")
     }
   },
 
@@ -515,9 +513,9 @@ throw new Error("Failed to load fee breakdown")
         pages: Math.floor(Math.random() * 20) + 5
       }
 
-      return { ...report }
+return { ...report }
     } catch (error) {
-throw new Error(`Failed to generate ${reportType} report`)
+      throw new Error(`Failed to generate ${reportType} report`)
     }
   },
 
@@ -691,14 +689,12 @@ throw new Error(`Failed to generate ${reportType} report`)
           ]
         }
       }
-
-      return { ...linkDetails }
-    } catch (error) {
-      throw new Error("Failed to load payment link details")
+return { ...linkDetails }
+} catch (error) {
 throw new Error("Failed to load payment link details")
-    }
-  }
-
+}
+}
+};
 // Security and Activity integration for business accounts
 export const businessSecurityService = {
   async getBusinessSecurityMetrics() {
@@ -855,4 +851,4 @@ export const businessSecurityService = {
       throw new Error("Failed to generate security report");
     }
   }
-}
+};
