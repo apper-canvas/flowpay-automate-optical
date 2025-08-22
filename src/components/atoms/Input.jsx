@@ -6,9 +6,18 @@ const Input = forwardRef(({
   type = "text",
   label,
   error,
+  size = "md",
   ...props 
 }, ref) => {
-  const inputStyles = "flex h-12 w-full rounded-xl border border-gray-200 bg-surface px-4 py-3 text-sm placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary disabled:cursor-not-allowed disabled:opacity-50"
+  const sizes = {
+    sm: "h-10 px-3 py-2 text-sm",
+    md: "h-12 px-4 py-3 text-sm", 
+    lg: "h-14 px-5 py-4 text-base"
+  }
+  
+  const baseStyles = "flex w-full rounded-xl border border-gray-200 bg-surface placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary disabled:cursor-not-allowed disabled:opacity-50"
+  
+  const inputStyles = `${baseStyles} ${sizes[size]}`
   
   return (
     <div className="space-y-2">
@@ -27,7 +36,7 @@ const Input = forwardRef(({
         ref={ref}
         {...props}
       />
-      {error && (
+{error && (
         <p className="text-sm text-error font-medium">{error}</p>
       )}
     </div>

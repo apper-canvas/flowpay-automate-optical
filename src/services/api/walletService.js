@@ -1,6 +1,8 @@
-import walletData from "@/services/mockData/wallets.json"
-import transactionData from "@/services/mockData/transactions.json"
-import fundingSourceData from "@/services/mockData/fundingSources.json"
+import React from "react";
+import transactionData from "@/services/mockData/transactions.json";
+import fundingSourceData from "@/services/mockData/fundingSources.json";
+import walletData from "@/services/mockData/wallets.json";
+import Error from "@/components/ui/Error";
 
 // Helper function to create delay
 const delay = (ms) => new Promise(resolve => setTimeout(resolve, ms))
@@ -136,12 +138,60 @@ export const walletService = {
     }
   },
 
-  async getFundingSources() {
+async getFundingSources() {
     await delay(250)
     try {
       return fundingSourceData.map(fs => ({ ...fs }))
     } catch (error) {
       throw new Error("Failed to load funding sources")
+    }
+  },
+
+  async getFilteredTransactions(transactions, filters) {
+    await delay(100) // Small delay for smooth UX
+    try {
+      let filtered = [...transactions]
+
+      // Filter by type
+      if (filters.type && filters.type !== "all") {
+        filtered = filtered.filter(t => t.type === filters.type)
+      }
+
+      // Filter by search query
+      if (filters.searchQuery) {
+        const query = filters.searchQuery.toLowerCase()
+        filtered = filtered.filter(t =>
+          t.recipient.toLowerCase().includes(query)
+        )
+      }
+
+      // Filter by date range
+      if (filters.dateFrom || filters.dateTo) {
+        filtered = filtered.filter(t => {
+          const transactionDate = new Date(t.timestamp)
+          const fromDate = filters.dateFrom ? new Date(filters.dateFrom) : null
+          const toDate = filters.dateTo ? new Date(filters.dateTo + "T23:59:59") : null
+
+          if (fromDate && transactionDate < fromDate) return false
+          if (toDate && transactionDate > toDate) return false
+          return true
+        })
+      }
+
+      // Filter by amount range
+      if (filters.amountMin !== "" || filters.amountMax !== "") {
+        filtered = filtered.filter(t => {
+          const amount = Math.abs(t.amount)
+          const minAmount = filters.amountMin ? parseFloat(filters.amountMin) : 0
+          const maxAmount = filters.amountMax ? parseFloat(filters.amountMax) : Infinity
+
+          return amount >= minAmount && amount <= maxAmount
+        })
+      }
+
+      return filtered
+    } catch (error) {
+      throw new Error("Failed to filter transactions")
     }
   }
 }
