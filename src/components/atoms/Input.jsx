@@ -9,10 +9,11 @@ const Input = forwardRef(({
   size = "md",
   ...props 
 }, ref) => {
-  const sizes = {
+const sizes = {
     sm: "h-10 px-3 py-2 text-sm",
     md: "h-12 px-4 py-3 text-sm", 
-    lg: "h-14 px-5 py-4 text-base"
+    lg: "h-14 px-5 py-4 text-base",
+    xl: "h-16 px-6 py-5 text-lg"
   }
   
   const baseStyles = "flex w-full rounded-xl border border-gray-200 bg-surface placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary disabled:cursor-not-allowed disabled:opacity-50"

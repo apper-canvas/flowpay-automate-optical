@@ -3,6 +3,7 @@ import { ToastContainer } from "react-toastify";
 import DashboardPage from "@/components/pages/DashboardPage";
 import React from "react";
 import P2PTransferPage from "@/components/pages/P2PTransferPage";
+import VirtualCardsPage from "@/components/pages/VirtualCardsPage";
 import PaymentLinksPage from "@/components/pages/PaymentLinksPage";
 import HistoryPage from "@/components/pages/HistoryPage";
 import SettingsPage from "@/components/pages/SettingsPage";
@@ -38,8 +39,9 @@ function App() {
             <Route path="/business/invoices" element={<InvoicePage />} />
             <Route path="/more" element={<MorePage />} />
             <Route path="/settings" element={<SettingsPage />} />
-            <Route path="/settings/notifications" element={<NotificationsPage />} />
+<Route path="/settings/notifications" element={<NotificationsPage />} />
             <Route path="/settings/support" element={<SupportPage />} />
+            <Route path="/virtual-cards" element={<VirtualCardsPage />} />
           </Route>
         </Routes>
       </BrowserRouter>

@@ -1,0 +1,30 @@
+[
+  {
+    "Id": 1,
+    "cardNumber": "4532 1234 5678 9012",
+    "expiryDate": "12/27",
+    "cvv": "123",
+    "purpose": "online-shopping",
+    "spendingLimit": 500.00,
+    "currentSpending": 125.50,
+    "walletId": 1,
+    "currency": "USD",
+    "isActive": true,
+    "createdAt": "2024-01-08T10:30:00.000Z",
+    "lastUsed": "2024-01-13T14:22:00.000Z"
+  },
+  {
+    "Id": 2,
+    "cardNumber": "5555 4444 3333 2222",
+    "expiryDate": "08/28",
+    "cvv": "456",
+    "purpose": "subscription",
+    "spendingLimit": 100.00,
+    "currentSpending": 29.99,
+    "walletId": 1,
+    "currency": "USD",
+    "isActive": true,
+    "createdAt": "2024-01-01T09:15:00.000Z",
+    "lastUsed": "2023-12-15T16:45:00.000Z"
+  }
+]

@@ -4,6 +4,7 @@ import WalletBalance from "@/components/organisms/WalletBalance"
 import QuickActions from "@/components/organisms/QuickActions"
 import RecentActivity from "@/components/organisms/RecentActivity"
 import AddMoneyModal from "@/components/organisms/AddMoneyModal"
+import VirtualCards from "@/components/organisms/VirtualCards"
 import ApperIcon from "@/components/ApperIcon"
 import { toast } from "react-toastify"
 
@@ -78,7 +79,10 @@ const WalletPage = () => {
           onSend={handleSend}
           onRequest={handleRequest}
           onScan={handleScan}
-        />
+/>
+        
+        {/* Virtual Cards */}
+        <VirtualCards />
         
         {/* Recent Activity */}
         <RecentActivity refreshTrigger={refreshTrigger} />

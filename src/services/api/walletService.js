@@ -1,8 +1,6 @@
-import React from "react";
 import transactionData from "@/services/mockData/transactions.json";
 import fundingSourceData from "@/services/mockData/fundingSources.json";
 import walletData from "@/services/mockData/wallets.json";
-import Error from "@/components/ui/Error";
 
 // Helper function to create delay
 const delay = (ms) => new Promise(resolve => setTimeout(resolve, ms))
@@ -312,7 +310,6 @@ throw new Error("Failed to send P2P transfer")
       throw new Error("Failed to process currency exchange")
     }
 },
-
   // Business transaction methods
   async getBusinessTransactions(limit) {
     await delay(250)
@@ -391,9 +388,179 @@ throw new Error("Failed to send P2P transfer")
             { period: "Nov 2023", revenue: 42300.65 }
           ]
         }
-      }
+}
     } catch (error) {
       throw new Error("Failed to load business metrics")
     }
+  },
+
+  // Virtual Card methods
+  async getAllVirtualCards() {
+    await delay(300)
+    try {
+      return virtualCardsState.map(card => ({ ...card }))
+    } catch (error) {
+      throw new Error("Failed to load virtual cards")
+    }
+  },
+
+  async getVirtualCardById(id) {
+    await delay(250)
+    try {
+      const card = virtualCardsState.find(c => c.Id === parseInt(id))
+      if (!card) {
+        throw new Error("Virtual card not found")
+      }
+      return { ...card }
+    } catch (error) {
+      throw new Error("Failed to load virtual card")
+    }
+  },
+
+  async createVirtualCard({ purpose, spendingLimit, walletId }) {
+    await delay(500)
+    try {
+      const wallet = walletsState.find(w => w.Id === parseInt(walletId))
+      if (!wallet) {
+        throw new Error("Wallet not found")
+      }
+
+      const newCard = {
+        Id: Math.max(...virtualCardsState.map(c => c.Id), 0) + 1,
+        cardNumber: generateCardNumber(),
+        expiryDate: generateExpiryDate(),
+        cvv: generateCVV(),
+        purpose,
+        spendingLimit: parseFloat(spendingLimit),
+        currentSpending: 0,
+        walletId: parseInt(walletId),
+        currency: wallet.currency,
+        isActive: true,
+        createdAt: new Date().toISOString(),
+        lastUsed: null
+      }
+
+      virtualCardsState.unshift(newCard)
+      return { ...newCard }
+    } catch (error) {
+      throw new Error("Failed to create virtual card")
+    }
+  },
+
+  async updateVirtualCard(id, updates) {
+    await delay(400)
+    try {
+      const cardIndex = virtualCardsState.findIndex(c => c.Id === parseInt(id))
+      if (cardIndex === -1) {
+        throw new Error("Virtual card not found")
+      }
+
+      virtualCardsState[cardIndex] = {
+        ...virtualCardsState[cardIndex],
+        ...updates
+      }
+
+      return { ...virtualCardsState[cardIndex] }
+    } catch (error) {
+      throw new Error("Failed to update virtual card")
+    }
+  },
+
+  async deleteVirtualCard(id) {
+    await delay(300)
+    try {
+      const cardIndex = virtualCardsState.findIndex(c => c.Id === parseInt(id))
+      if (cardIndex === -1) {
+        throw new Error("Virtual card not found")
+      }
+
+      const deletedCard = virtualCardsState.splice(cardIndex, 1)[0]
+      return { ...deletedCard }
+    } catch (error) {
+      throw new Error("Failed to delete virtual card")
+    }
+  },
+
+  async recordVirtualCardSpending(id, amount) {
+    await delay(400)
+    try {
+      const cardIndex = virtualCardsState.findIndex(c => c.Id === parseInt(id))
+      if (cardIndex === -1) {
+        throw new Error("Virtual card not found")
+      }
+
+      const card = virtualCardsState[cardIndex]
+      const newSpending = card.currentSpending + parseFloat(amount)
+
+      if (newSpending > card.spendingLimit) {
+        throw new Error("Spending limit exceeded")
+      }
+
+      virtualCardsState[cardIndex] = {
+        ...card,
+        currentSpending: newSpending,
+        lastUsed: new Date().toISOString()
+      }
+
+      return { ...virtualCardsState[cardIndex] }
+    } catch (error) {
+      throw new Error("Failed to record spending")
+    }
   }
+}
+
+// Virtual cards in-memory storage
+let virtualCardsState = [
+  {
+    Id: 1,
+    cardNumber: "4532 1234 5678 9012",
+    expiryDate: "12/27",
+    cvv: "123",
+    purpose: "online-shopping",
+    spendingLimit: 500.00,
+    currentSpending: 125.50,
+    walletId: 1,
+    currency: "USD",
+    isActive: true,
+    createdAt: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString(),
+    lastUsed: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000).toISOString()
+  },
+  {
+    Id: 2,
+    cardNumber: "5555 4444 3333 2222",
+    expiryDate: "08/28",
+    cvv: "456",
+    purpose: "subscription",
+    spendingLimit: 100.00,
+    currentSpending: 29.99,
+    walletId: 1,
+    currency: "USD",
+    isActive: true,
+    createdAt: new Date(Date.now() - 14 * 24 * 60 * 60 * 1000).toISOString(),
+    lastUsed: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString()
+  }
+]
+
+// Helper functions for card generation
+function generateCardNumber() {
+  const prefixes = ["4532", "5555", "4111", "4000"]
+  const prefix = prefixes[Math.floor(Math.random() * prefixes.length)]
+  let number = prefix
+  
+  for (let i = 0; i < 12; i++) {
+    number += Math.floor(Math.random() * 10)
+  }
+  
+  return number.replace(/(.{4})/g, '$1 ').trim()
+}
+
+function generateExpiryDate() {
+  const currentYear = new Date().getFullYear()
+  const year = currentYear + Math.floor(Math.random() * 5) + 1
+  const month = Math.floor(Math.random() * 12) + 1
+  return `${month.toString().padStart(2, '0')}/${year.toString().slice(-2)}`
+}
+
+function generateCVV() {
+  return Math.floor(Math.random() * 900 + 100).toString()
 }

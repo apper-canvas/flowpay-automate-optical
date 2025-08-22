@@ -1,7 +1,7 @@
 import { motion } from "framer-motion"
 import QuickAction from "@/components/molecules/QuickAction"
 
-const QuickActions = ({ onAddMoney, onSend, onRequest, onScan }) => {
+const QuickActions = ({ onAddMoney, onSend, onRequest, onScan, onCreateCard }) => {
   const actions = [
     { icon: "Plus", label: "Add Money", onClick: onAddMoney, variant: "primary" },
     { icon: "Send", label: "Send", onClick: onSend, variant: "default" },
