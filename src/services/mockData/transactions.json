@@ -1,0 +1,74 @@
+[
+  {
+    "Id": 1,
+    "type": "payment",
+    "amount": -89.50,
+    "currency": "USD",
+    "recipient": "Starbucks Coffee",
+    "timestamp": "2024-01-15T14:30:00Z",
+    "status": "completed"
+  },
+  {
+    "Id": 2,
+    "type": "received",
+    "amount": 450.00,
+    "currency": "USD",
+    "recipient": "Sarah Chen",
+    "timestamp": "2024-01-15T09:15:00Z",
+    "status": "completed"
+  },
+  {
+    "Id": 3,
+    "type": "payment",
+    "amount": -25.75,
+    "currency": "USD",
+    "recipient": "Uber Technologies",
+    "timestamp": "2024-01-14T20:45:00Z",
+    "status": "completed"
+  },
+  {
+    "Id": 4,
+    "type": "deposit",
+    "amount": 1000.00,
+    "currency": "USD",
+    "recipient": "Bank Transfer",
+    "timestamp": "2024-01-14T16:20:00Z",
+    "status": "completed"
+  },
+  {
+    "Id": 5,
+    "type": "payment",
+    "amount": -156.80,
+    "currency": "USD",
+    "recipient": "Amazon.com",
+    "timestamp": "2024-01-13T11:30:00Z",
+    "status": "completed"
+  },
+  {
+    "Id": 6,
+    "type": "received",
+    "amount": 200.00,
+    "currency": "USD",
+    "recipient": "Michael Johnson",
+    "timestamp": "2024-01-12T18:15:00Z",
+    "status": "completed"
+  },
+  {
+    "Id": 7,
+    "type": "payment",
+    "amount": -45.20,
+    "currency": "USD",
+    "recipient": "Shell Gas Station",
+    "timestamp": "2024-01-12T08:45:00Z",
+    "status": "completed"
+  },
+  {
+    "Id": 8,
+    "type": "exchange",
+    "amount": -500.00,
+    "currency": "USD",
+    "recipient": "EUR Exchange",
+    "timestamp": "2024-01-11T14:20:00Z",
+    "status": "completed"
+  }
+]

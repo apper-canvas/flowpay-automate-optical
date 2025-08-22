@@ -1,0 +1,34 @@
+[
+  {
+    "Id": 1,
+    "type": "bank",
+    "name": "Chase Checking",
+    "lastFour": "4521",
+    "icon": "Building2",
+    "isDefault": true
+  },
+  {
+    "Id": 2,
+    "type": "card",
+    "name": "Visa Debit Card",
+    "lastFour": "8934",
+    "icon": "CreditCard",
+    "isDefault": false
+  },
+  {
+    "Id": 3,
+    "type": "bank",
+    "name": "Wells Fargo Savings",
+    "lastFour": "7268",
+    "icon": "Building2",
+    "isDefault": false
+  },
+  {
+    "Id": 4,
+    "type": "card",
+    "name": "American Express",
+    "lastFour": "1009",
+    "icon": "CreditCard",
+    "isDefault": false
+  }
+]

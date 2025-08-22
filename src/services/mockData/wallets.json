@@ -1,0 +1,52 @@
+[
+  {
+    "Id": 1,
+    "currency": "USD",
+    "symbol": "$",
+    "balance": 2847.50,
+    "change24h": 2.5,
+    "isPrimary": true,
+    "name": "US Dollar",
+    "code": "USD"
+  },
+  {
+    "Id": 2,
+    "currency": "EUR",
+    "symbol": "€",
+    "balance": 1205.75,
+    "change24h": -1.2,
+    "isPrimary": false,
+    "name": "Euro",
+    "code": "EUR"
+  },
+  {
+    "Id": 3,
+    "currency": "GBP",
+    "symbol": "£",
+    "balance": 890.25,
+    "change24h": 0.8,
+    "isPrimary": false,
+    "name": "British Pound",
+    "code": "GBP"
+  },
+  {
+    "Id": 4,
+    "currency": "BTC",
+    "symbol": "₿",
+    "balance": 0.05420000,
+    "change24h": 5.7,
+    "isPrimary": false,
+    "name": "Bitcoin",
+    "code": "BTC"
+  },
+  {
+    "Id": 5,
+    "currency": "ETH",
+    "symbol": "Ξ",
+    "balance": 1.24500000,
+    "change24h": -3.2,
+    "isPrimary": false,
+    "name": "Ethereum",
+    "code": "ETH"
+  }
+]
