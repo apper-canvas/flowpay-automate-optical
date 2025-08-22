@@ -1,15 +1,26 @@
 [
   {
-    "Id": 1,
+"Id": 1,
     "title": "Team Dinner",
     "description": "Dinner at The Grand Restaurant",
+    "category": "Food & Dining",
     "totalAmount": 240.00,
     "currency": "USD",
     "splitMethod": "equal",
+    "splitData": {},
+    "receiptPhoto": null,
     "createdBy": 1,
     "createdAt": "2024-01-15T18:30:00Z",
     "dueDate": "2024-01-22T23:59:59Z",
     "status": "active",
+    "remindersSent": [
+      {
+        "contactId": 2,
+        "sentAt": "2024-01-17T10:00:00Z",
+        "type": "payment_reminder"
+      }
+    ],
+    "lastReminderDate": "2024-01-17T10:00:00Z",
     "participants": [
       {
         "contactId": 1,
@@ -38,16 +49,28 @@
     ]
   },
   {
-    "Id": 2,
+"Id": 2,
     "title": "Weekend Trip",
     "description": "Shared accommodation costs",
+    "category": "Travel",
     "totalAmount": 480.00,
     "currency": "USD",
-    "splitMethod": "equal",
+    "splitMethod": "custom",
+    "splitData": {
+      "customAmounts": {
+        "1": 120.00,
+        "3": 120.00,
+        "5": 120.00,
+        "6": 120.00
+      }
+    },
+    "receiptPhoto": null,
     "createdBy": 2,
     "createdAt": "2024-01-10T12:00:00Z",
     "dueDate": "2024-01-24T23:59:59Z",
     "status": "active",
+    "remindersSent": [],
+    "lastReminderDate": null,
     "participants": [
       {
         "contactId": 1,
@@ -76,16 +99,21 @@
     ]
   },
   {
-    "Id": 3,
+"Id": 3,
     "title": "Office Lunch",
     "description": "Pizza order for the team",
+    "category": "Food & Dining",
     "totalAmount": 85.50,
     "currency": "USD",
     "splitMethod": "equal",
+    "splitData": {},
+    "receiptPhoto": null,
     "createdBy": 1,
     "createdAt": "2024-01-12T13:15:00Z",
     "dueDate": "2024-01-19T23:59:59Z",
     "status": "settled",
+    "remindersSent": [],
+    "lastReminderDate": null,
     "participants": [
       {
         "contactId": 2,

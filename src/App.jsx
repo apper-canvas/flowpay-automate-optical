@@ -43,7 +43,8 @@ function App() {
 <Route path="/alerts" element={<AlertsPage />} />
             <Route path="/payments" element={<PaymentsPage />} />
             <Route path="/payments/transfer" element={<P2PTransferPage />} />
-            <Route path="/payments/split-bill" element={<SplitBillPage />} />
+<Route path="/payments/split-bill" element={<SplitBillPage />} />
+            <Route path="/payments/split-bill/:id" element={<SplitBillPage />} />
             <Route path="/payments/exchange" element={<CurrencyExchangePage />} />
             <Route path="/checkout" element={<CheckoutPage />} />
             <Route path="/history" element={<HistoryPage />} />

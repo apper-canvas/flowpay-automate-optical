@@ -1,24 +1,24 @@
-import { useState, useEffect } from "react"
-import { useNavigate } from "react-router-dom"
-import { motion } from "framer-motion"
-import { toast } from "react-toastify"
-import { format } from "date-fns"
-import Button from "@/components/atoms/Button"
-import Input from "@/components/atoms/Input"
-import Card from "@/components/atoms/Card"
-import Badge from "@/components/atoms/Badge"
-import ContactPicker from "@/components/molecules/ContactPicker"
-import ApperIcon from "@/components/ApperIcon"
-import Loading from "@/components/ui/Loading"
-import Error from "@/components/ui/Error"
-import Empty from "@/components/ui/Empty"
-import { splitBillService } from "@/services/api/splitBillService"
-import { contactService } from "@/services/api/contactService"
+import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { motion } from "framer-motion";
+import { toast } from "react-toastify";
+import { format } from "date-fns";
+import { splitBillService } from "@/services/api/splitBillService";
+import { contactService } from "@/services/api/contactService";
+import ApperIcon from "@/components/ApperIcon";
+import Error from "@/components/ui/Error";
+import Empty from "@/components/ui/Empty";
+import Loading from "@/components/ui/Loading";
+import ContactPicker from "@/components/molecules/ContactPicker";
+import Button from "@/components/atoms/Button";
+import Card from "@/components/atoms/Card";
+import Badge from "@/components/atoms/Badge";
+import Input from "@/components/atoms/Input";
 
 const SplitBillPage = () => {
   const navigate = useNavigate()
-  const [view, setView] = useState("list") // list, create
-  const [step, setStep] = useState(1) // 1: Details, 2: Participants, 3: Confirm
+  const [view, setView] = useState("list") // list, create, details
+  const [step, setStep] = useState(1) // 1: Details, 2: Participants, 3: Split Method, 4: Confirm
   const [splitBills, setSplitBills] = useState([])
   const [loading, setLoading] = useState(true)
   const [submitting, setSubmitting] = useState(false)
@@ -27,11 +27,23 @@ const SplitBillPage = () => {
   // Create form state
   const [title, setTitle] = useState("")
   const [description, setDescription] = useState("")
+  const [category, setCategory] = useState("")
   const [totalAmount, setTotalAmount] = useState("")
   const [dueDate, setDueDate] = useState("")
+  const [receiptPhoto, setReceiptPhoto] = useState(null)
   const [selectedParticipants, setSelectedParticipants] = useState([])
   const [participantDetails, setParticipantDetails] = useState([])
+  const [splitMethod, setSplitMethod] = useState("equal") // equal, custom, percentage, itemized
+  const [customAmounts, setCustomAmounts] = useState({})
+  const [percentages, setPercentages] = useState({})
+  const [lineItems, setLineItems] = useState([])
+  const [selectedBillId, setSelectedBillId] = useState(null)
 
+  // Categories for expense tracking
+  const expenseCategories = [
+    "Food & Dining", "Transportation", "Entertainment", "Shopping", 
+    "Travel", "Utilities", "Healthcare", "Education", "Other"
+  ]
   const loadSplitBills = async () => {
     try {
       setLoading(true)
@@ -69,20 +81,36 @@ const SplitBillPage = () => {
     }
   }, [step, selectedParticipants])
 
-  const handleCreateSplitBill = async () => {
+const handleCreateSplitBill = async () => {
     if (!title.trim() || !totalAmount || selectedParticipants.length === 0) return
 
     try {
       setSubmitting(true)
       
       const participantIds = selectedParticipants.map(p => p.Id)
+      
+      // Prepare split data based on method
+      let splitData = {}
+      
+      if (splitMethod === "custom") {
+        splitData = { customAmounts }
+      } else if (splitMethod === "percentage") {
+        splitData = { percentages }
+      } else if (splitMethod === "itemized") {
+        splitData = { lineItems }
+      }
+
       const newSplitBill = await splitBillService.createSplitBill({
         title,
         description,
+        category,
         totalAmount,
         dueDate: dueDate || new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString(),
+        receiptPhoto,
         participantIds,
-        createdBy: 1 // Current user ID
+        createdBy: 1, // Current user ID
+        splitMethod,
+        splitData
       })
 
       toast.success("Split bill created successfully!")
@@ -105,14 +133,28 @@ const SplitBillPage = () => {
       toast.error(err.message)
     }
   }
+const handleSendReminder = async (splitBillId, contactId) => {
+    try {
+      await splitBillService.sendPaymentReminder(splitBillId, contactId)
+      toast.success("Payment reminder sent!")
+    } catch (err) {
+      toast.error(err.message)
+    }
+  }
 
   const resetForm = () => {
     setTitle("")
     setDescription("")
+    setCategory("")
     setTotalAmount("")
     setDueDate("")
+    setReceiptPhoto(null)
     setSelectedParticipants([])
     setParticipantDetails([])
+    setSplitMethod("equal")
+    setCustomAmounts({})
+    setPercentages({})
+    setLineItems([])
     setStep(1)
   }
 
@@ -121,15 +163,76 @@ const SplitBillPage = () => {
       setStep(2)
     } else if (step === 2 && selectedParticipants.length > 0) {
       setStep(3)
+    } else if (step === 3) {
+      setStep(4)
     }
   }
 
-  const handleBack = () => {
+const handleBack = () => {
     if (step === 1) {
       setView("list")
       resetForm()
     } else {
       setStep(step - 1)
+    }
+  }
+
+  const handleReceiptUpload = (event) => {
+    const file = event.target.files[0]
+    if (file) {
+      if (file.size > 5 * 1024 * 1024) { // 5MB limit
+        toast.error("File size must be less than 5MB")
+        return
+      }
+      
+      const reader = new FileReader()
+      reader.onload = (e) => {
+        setReceiptPhoto(e.target.result)
+      }
+      reader.readAsDataURL(file)
+    }
+  }
+
+  const addLineItem = () => {
+    setLineItems([...lineItems, { description: "", amount: 0, participants: [] }])
+  }
+
+  const updateLineItem = (index, field, value) => {
+    const updated = [...lineItems]
+    updated[index][field] = value
+    setLineItems(updated)
+  }
+
+  const removeLineItem = (index) => {
+    setLineItems(lineItems.filter((_, i) => i !== index))
+  }
+
+  const calculateSplit = () => {
+    const amount = parseFloat(totalAmount)
+    if (!amount || selectedParticipants.length === 0) return {}
+
+    switch (splitMethod) {
+      case "equal":
+        return selectedParticipants.reduce((acc, p) => {
+          acc[p.Id] = amount / selectedParticipants.length
+          return acc
+        }, {})
+      case "custom":
+        return customAmounts
+      case "percentage":
+        return Object.keys(percentages).reduce((acc, id) => {
+          acc[id] = (amount * (percentages[id] / 100))
+          return acc
+        }, {})
+      case "itemized":
+        return selectedParticipants.reduce((acc, p) => {
+          acc[p.Id] = lineItems.reduce((sum, item) => {
+            return item.participants.includes(p.Id) ? sum + (item.amount / item.participants.length) : sum
+          }, 0)
+          return acc
+        }, {})
+      default:
+        return {}
     }
   }
 
@@ -147,12 +250,12 @@ const SplitBillPage = () => {
       default: return "default"
     }
   }
-
-  const getStepTitle = () => {
+const getStepTitle = () => {
     switch (step) {
       case 1: return "Split Bill Details"
       case 2: return "Add Participants"
-      case 3: return "Confirm & Send"
+      case 3: return "Split Method"
+      case 4: return "Confirm & Send"
       default: return "Create Split Bill"
     }
   }
@@ -232,7 +335,7 @@ const SplitBillPage = () => {
                         </div>
 
                         {/* Participants */}
-                        <div className="space-y-2">
+<div className="space-y-2">
                           <h4 className="text-sm font-semibold text-gray-700">Participants</h4>
                           <div className="space-y-2">
                             {bill.participants.map((participant, pIndex) => (
@@ -248,14 +351,24 @@ const SplitBillPage = () => {
                                     {formatAmount(participant.amountOwed)}
                                   </span>
                                   {participant.status === "pending" ? (
-                                    <Button
-                                      size="sm"
-                                      variant="outline"
-                                      onClick={() => handleMarkAsPaid(bill.Id, participant.contactId)}
-                                    >
-                                      <ApperIcon name="Check" size={12} className="mr-1" />
-                                      Mark Paid
-                                    </Button>
+                                    <div className="flex space-x-1">
+                                      <Button
+                                        size="sm"
+                                        variant="ghost"
+                                        onClick={() => handleSendReminder(bill.Id, participant.contactId)}
+                                      >
+                                        <ApperIcon name="Bell" size={12} className="mr-1" />
+                                        Remind
+                                      </Button>
+                                      <Button
+                                        size="sm"
+                                        variant="outline"
+                                        onClick={() => handleMarkAsPaid(bill.Id, participant.contactId)}
+                                      >
+                                        <ApperIcon name="Check" size={12} className="mr-1" />
+                                        Mark Paid
+                                      </Button>
+                                    </div>
                                   ) : (
                                     <Badge variant="success" size="xs">Paid</Badge>
                                   )}
@@ -264,6 +377,16 @@ const SplitBillPage = () => {
                             ))}
                           </div>
                         </div>
+
+                        {/* Additional bill details */}
+                        {bill.category && (
+                          <div className="pt-2 border-t border-gray-100">
+                            <div className="flex items-center justify-between text-xs">
+                              <span className="text-gray-500">Category</span>
+                              <Badge variant="default" size="xs">{bill.category}</Badge>
+                            </div>
+                          </div>
+                        )}
                       </div>
                     </Card>
                   </motion.div>
@@ -288,10 +411,10 @@ const SplitBillPage = () => {
 
       {view === "create" && (
         <>
-          {/* Step Indicator */}
+{/* Step Indicator */}
           <div className="px-4 mb-6">
             <div className="flex items-center space-x-2">
-              {[1, 2, 3].map((stepNumber) => (
+              {[1, 2, 3, 4].map((stepNumber) => (
                 <div
                   key={stepNumber}
                   className={`flex-1 h-2 rounded-full ${
@@ -335,6 +458,21 @@ const SplitBillPage = () => {
                       className="w-full"
                     />
                   </div>
+<div>
+                    <label className="block text-sm font-semibold text-gray-700 mb-2">
+                      Category
+                    </label>
+                    <select
+                      value={category}
+                      onChange={(e) => setCategory(e.target.value)}
+                      className="w-full h-12 px-4 py-3 text-sm border border-gray-200 rounded-xl bg-surface focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary"
+                    >
+                      <option value="">Select category</option>
+                      {expenseCategories.map(cat => (
+                        <option key={cat} value={cat}>{cat}</option>
+                      ))}
+                    </select>
+                  </div>
 
                   <div>
                     <label className="block text-sm font-semibold text-gray-700 mb-2">
@@ -347,6 +485,45 @@ const SplitBillPage = () => {
                       onChange={(e) => setTotalAmount(e.target.value)}
                       className="w-full"
                     />
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-semibold text-gray-700 mb-2">
+                      Receipt Photo (Optional)
+                    </label>
+                    <div className="space-y-3">
+                      <input
+                        type="file"
+                        accept="image/*"
+                        onChange={handleReceiptUpload}
+                        className="hidden"
+                        id="receipt-upload"
+                      />
+                      <label
+                        htmlFor="receipt-upload"
+                        className="flex items-center justify-center w-full h-12 px-4 py-3 border-2 border-dashed border-gray-300 rounded-xl cursor-pointer hover:border-primary transition-colors"
+                      >
+                        <ApperIcon name="Camera" size={16} className="mr-2 text-gray-500" />
+                        <span className="text-sm text-gray-600">
+                          {receiptPhoto ? "Change receipt" : "Upload receipt"}
+                        </span>
+                      </label>
+                      {receiptPhoto && (
+                        <div className="relative">
+                          <img
+                            src={receiptPhoto}
+                            alt="Receipt"
+                            className="w-20 h-20 object-cover rounded-lg"
+                          />
+                          <button
+                            onClick={() => setReceiptPhoto(null)}
+                            className="absolute -top-1 -right-1 w-5 h-5 bg-error text-white rounded-full flex items-center justify-center text-xs"
+                          >
+                            ×
+                          </button>
+                        </div>
+                      )}
+                    </div>
                   </div>
 
                   <div>
@@ -436,9 +613,177 @@ const SplitBillPage = () => {
                   </Button>
                 </motion.div>
               )}
-
-              {/* Step 3: Confirm */}
+{/* Step 3: Split Method */}
               {step === 3 && (
+                <motion.div
+                  initial={{ opacity: 0, x: 20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  className="space-y-6"
+                >
+                  <div>
+                    <h3 className="text-sm font-semibold text-gray-700 mb-4">
+                      How would you like to split {formatAmount(totalAmount)}?
+                    </h3>
+                  </div>
+
+                  {/* Split method selection */}
+                  <div className="grid grid-cols-2 gap-3">
+                    {[
+                      { key: "equal", label: "Equal Split", icon: "Users" },
+                      { key: "custom", label: "Custom Amounts", icon: "Calculator" },
+                      { key: "percentage", label: "Percentage", icon: "Percent" },
+                      { key: "itemized", label: "Line Items", icon: "List" }
+                    ].map(method => (
+                      <button
+                        key={method.key}
+                        onClick={() => setSplitMethod(method.key)}
+                        className={`p-4 rounded-xl border-2 transition-all ${
+                          splitMethod === method.key
+                            ? "border-primary bg-primary/5"
+                            : "border-gray-200 hover:border-gray-300"
+                        }`}
+                      >
+                        <div className="flex flex-col items-center space-y-2">
+                          <ApperIcon name={method.icon} size={24} className={
+                            splitMethod === method.key ? "text-primary" : "text-gray-500"
+                          } />
+                          <span className={`text-sm font-medium ${
+                            splitMethod === method.key ? "text-primary" : "text-gray-700"
+                          }`}>
+                            {method.label}
+                          </span>
+                        </div>
+                      </button>
+                    ))}
+                  </div>
+
+                  {/* Custom amounts input */}
+                  {splitMethod === "custom" && (
+                    <div className="space-y-4">
+                      <h4 className="text-sm font-semibold text-gray-700">Enter custom amounts:</h4>
+                      {selectedParticipants.map(participant => (
+                        <div key={participant.Id} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                          <span className="text-sm text-gray-700">{participant.name}</span>
+                          <div className="w-24">
+                            <Input
+                              type="number"
+                              placeholder="0.00"
+                              value={customAmounts[participant.Id] || ""}
+                              onChange={(e) => setCustomAmounts({
+                                ...customAmounts,
+                                [participant.Id]: parseFloat(e.target.value) || 0
+                              })}
+                              size="sm"
+                            />
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+
+                  {/* Percentage split */}
+                  {splitMethod === "percentage" && (
+                    <div className="space-y-4">
+                      <h4 className="text-sm font-semibold text-gray-700">Enter percentages (must total 100%):</h4>
+                      {selectedParticipants.map(participant => (
+                        <div key={participant.Id} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                          <span className="text-sm text-gray-700">{participant.name}</span>
+                          <div className="flex items-center space-x-2">
+                            <div className="w-16">
+                              <Input
+                                type="number"
+                                placeholder="0"
+                                value={percentages[participant.Id] || ""}
+                                onChange={(e) => setPercentages({
+                                  ...percentages,
+                                  [participant.Id]: parseFloat(e.target.value) || 0
+                                })}
+                                size="sm"
+                              />
+                            </div>
+                            <span className="text-sm text-gray-500">%</span>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+
+                  {/* Itemized split */}
+                  {splitMethod === "itemized" && (
+                    <div className="space-y-4">
+                      <div className="flex items-center justify-between">
+                        <h4 className="text-sm font-semibold text-gray-700">Line items:</h4>
+                        <Button size="sm" variant="ghost" onClick={addLineItem}>
+                          <ApperIcon name="Plus" size={14} className="mr-1" />
+                          Add Item
+                        </Button>
+                      </div>
+                      
+                      {lineItems.map((item, index) => (
+                        <div key={index} className="p-4 border border-gray-200 rounded-lg space-y-3">
+                          <div className="flex items-center justify-between">
+                            <Input
+                              placeholder="Item description"
+                              value={item.description}
+                              onChange={(e) => updateLineItem(index, "description", e.target.value)}
+                              className="flex-1 mr-3"
+                              size="sm"
+                            />
+                            <div className="w-24 mr-2">
+                              <Input
+                                type="number"
+                                placeholder="0.00"
+                                value={item.amount}
+                                onChange={(e) => updateLineItem(index, "amount", parseFloat(e.target.value) || 0)}
+                                size="sm"
+                              />
+                            </div>
+                            <Button
+                              size="sm"
+                              variant="ghost"
+                              onClick={() => removeLineItem(index)}
+                            >
+                              <ApperIcon name="X" size={14} />
+                            </Button>
+                          </div>
+                          
+                          <div className="text-xs text-gray-600 mb-2">Who shares this item?</div>
+                          <div className="flex flex-wrap gap-2">
+                            {selectedParticipants.map(participant => (
+                              <button
+                                key={participant.Id}
+                                onClick={() => {
+                                  const participants = item.participants.includes(participant.Id)
+                                    ? item.participants.filter(id => id !== participant.Id)
+                                    : [...item.participants, participant.Id]
+                                  updateLineItem(index, "participants", participants)
+                                }}
+                                className={`px-2 py-1 rounded text-xs transition-colors ${
+                                  item.participants.includes(participant.Id)
+                                    ? "bg-primary text-white"
+                                    : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+                                }`}
+                              >
+                                {participant.name}
+                              </button>
+                            ))}
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+
+                  <Button 
+                    onClick={handleNext}
+                    className="w-full"
+                  >
+                    Continue
+                  </Button>
+                </motion.div>
+              )}
+
+              {/* Step 4: Confirm */}
+{step === 4 && (
                 <motion.div
                   initial={{ opacity: 0, x: 20 }}
                   animate={{ opacity: 1, x: 0 }}
@@ -465,6 +810,13 @@ const SplitBillPage = () => {
                           </span>
                         </div>
                       )}
+
+                      {category && (
+                        <div className="flex justify-between">
+                          <span className="text-sm text-gray-600">Category</span>
+                          <span className="text-sm font-semibold text-gray-900">{category}</span>
+                        </div>
+                      )}
                       
                       <div className="flex justify-between">
                         <span className="text-sm text-gray-600">Total Amount</span>
@@ -480,23 +832,36 @@ const SplitBillPage = () => {
                         </span>
                       </div>
                       
-                      <div className="flex justify-between">
-                        <span className="text-sm text-gray-600">Amount per person</span>
-                        <span className="text-sm font-semibold text-gray-900">
-                          {formatAmount(parseFloat(totalAmount) / selectedParticipants.length)}
-                        </span>
-                      </div>
-                      
                       <hr className="border-gray-200" />
                       
                       <div className="flex justify-between">
                         <span className="text-base font-semibold text-gray-900">Split Method</span>
-                        <span className="text-base font-bold text-gray-900">Equal Split</span>
+                        <span className="text-base font-bold text-gray-900">
+                          {splitMethod === "equal" ? "Equal Split" :
+                           splitMethod === "custom" ? "Custom Amounts" :
+                           splitMethod === "percentage" ? "Percentage Split" :
+                           "Itemized Split"}
+                        </span>
                       </div>
+
+                      {/* Show participant breakdown */}
+                      <div className="space-y-2">
+                        <h4 className="text-sm font-semibold text-gray-700">Amount breakdown:</h4>
+                        {selectedParticipants.map(participant => {
+                          const splits = calculateSplit()
+                          const amount = splits[participant.Id] || 0
+                          return (
+                            <div key={participant.Id} className="flex justify-between text-sm">
+                              <span className="text-gray-600">{participant.name}</span>
+                              <span className="font-semibold text-gray-900">{formatAmount(amount)}</span>
+                            </div>
+                          )
+                        })}
+</div>
                     </div>
                   </Card>
 
-                  <Button 
+                  <Button
                     onClick={handleCreateSplitBill}
                     disabled={submitting}
                     className="w-full"
