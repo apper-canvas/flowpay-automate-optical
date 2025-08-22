@@ -16,10 +16,10 @@ const MorePage = () => {
     },
     {
       title: "Preferences",
-      items: [
+items: [
         { icon: "Palette", title: "Appearance", description: "Theme and display settings", badge: "New", action: () => toast.info("Appearance settings coming soon!") },
         { icon: "Globe", title: "Language & Region", description: "Language, currency, and locale", action: () => toast.info("Language settings coming soon!") },
-        { icon: "Smartphone", title: "Device Settings", description: "Biometrics and app preferences", action: () => toast.info("Device settings coming soon!") }
+        { icon: "Settings", title: "Settings", description: "Security, notifications, and preferences", action: () => window.location.href = "/settings" }
       ]
     },
     {
