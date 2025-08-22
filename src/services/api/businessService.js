@@ -235,7 +235,35 @@ export const businessService = {
 
       return { ...report }
     } catch (error) {
-      throw new Error("Failed to generate report")
+throw new Error("Failed to generate report")
+    }
+  },
+
+  async generateBusinessQR(paymentData) {
+    await delay(300)
+    try {
+      const qrData = {
+        merchantId: `MERCHANT-${Date.now()}`,
+        merchantName: paymentData.merchantName,
+        amount: paymentData.amount,
+        currency: "USD",
+        description: paymentData.description,
+        type: "business_payment",
+        timestamp: new Date().toISOString()
+      }
+
+      // Simulate QR code generation
+      const qrCode = {
+        Id: `QR-${Date.now()}`,
+        data: JSON.stringify(qrData),
+        url: `https://pay.flowpay.com/qr/${qrData.merchantId}?amount=${paymentData.amount}`,
+        createdAt: new Date().toISOString(),
+        expiresAt: new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString() // 24 hours
+      }
+
+      return { ...qrCode }
+    } catch (error) {
+      throw new Error("Failed to generate QR code")
     }
   }
 }

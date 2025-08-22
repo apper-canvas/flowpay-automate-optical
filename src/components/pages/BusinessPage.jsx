@@ -1,21 +1,23 @@
 import { useState, useEffect } from "react"
+import { useNavigate } from "react-router-dom"
 import { motion } from "framer-motion"
 import { toast } from "react-toastify"
 import BusinessMetrics from "@/components/molecules/BusinessMetrics"
 import BusinessChart from "@/components/molecules/BusinessChart"
 import BusinessQuickActions from "@/components/organisms/BusinessQuickActions"
 import BusinessTransactionList from "@/components/organisms/BusinessTransactionList"
+import Card from "@/components/atoms/Card"
+import ApperIcon from "@/components/ApperIcon"
 import Loading from "@/components/ui/Loading"
 import Error from "@/components/ui/Error"
 import { walletService } from "@/services/api/walletService"
-
 const BusinessPage = () => {
+  const navigate = useNavigate()
   const [metrics, setMetrics] = useState(null)
   const [transactions, setTransactions] = useState([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState("")
   const [refreshTrigger, setRefreshTrigger] = useState(0)
-
   const loadBusinessData = async () => {
     try {
       setLoading(true)
@@ -91,13 +93,88 @@ const BusinessPage = () => {
           <BusinessMetrics metrics={metrics} loading={loading} />
         </motion.div>
 
-        {/* Quick Actions */}
+{/* Quick Actions */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.2 }}
         >
           <BusinessQuickActions onActionComplete={handleActionComplete} />
+        </motion.div>
+
+        {/* Tools Section */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.25 }}
+        >
+          <div className="flex items-center justify-between mb-4">
+            <h3 className="text-lg font-display font-semibold text-gray-900">
+              Business Tools
+            </h3>
+          </div>
+          
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <Card 
+              padding="lg"
+              className="transition-all duration-200 cursor-pointer hover:shadow-lg hover:scale-[1.02] active:scale-[0.98]"
+              onClick={() => navigate('/business/tools')}
+            >
+              <div className="flex items-center space-x-4">
+                <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center">
+                  <ApperIcon name="QrCode" size={24} className="text-primary" />
+                </div>
+                <div>
+                  <h4 className="font-display font-semibold text-gray-900 mb-1">
+                    QR Generator
+                  </h4>
+                  <p className="text-sm text-gray-600">
+                    Generate QR codes for payments
+                  </p>
+                </div>
+              </div>
+            </Card>
+            
+            <Card 
+              padding="lg"
+              className="transition-all duration-200 cursor-pointer hover:shadow-lg hover:scale-[1.02] active:scale-[0.98]"
+              onClick={() => navigate('/business/tools')}
+            >
+              <div className="flex items-center space-x-4">
+                <div className="w-12 h-12 rounded-xl bg-success/10 flex items-center justify-center">
+                  <ApperIcon name="Link" size={24} className="text-success" />
+                </div>
+                <div>
+                  <h4 className="font-display font-semibold text-gray-900 mb-1">
+                    Payment Links
+                  </h4>
+                  <p className="text-sm text-gray-600">
+                    Create shareable payment links
+                  </p>
+                </div>
+              </div>
+            </Card>
+            
+            <Card 
+              padding="lg"
+              className="transition-all duration-200 cursor-pointer hover:shadow-lg hover:scale-[1.02] active:scale-[0.98]"
+              onClick={() => navigate('/business/tools')}
+            >
+              <div className="flex items-center space-x-4">
+                <div className="w-12 h-12 rounded-xl bg-info/10 flex items-center justify-center">
+                  <ApperIcon name="FileText" size={24} className="text-info" />
+                </div>
+                <div>
+                  <h4 className="font-display font-semibold text-gray-900 mb-1">
+                    Invoice Templates
+                  </h4>
+                  <p className="text-sm text-gray-600">
+                    Generate professional invoices
+                  </p>
+                </div>
+              </div>
+            </Card>
+          </div>
         </motion.div>
 
         {/* Revenue Analytics Chart */}
