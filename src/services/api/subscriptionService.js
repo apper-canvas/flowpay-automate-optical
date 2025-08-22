@@ -1,7 +1,5 @@
-import React from "react";
 import subscriptionData from "@/services/mockData/subscriptions.json";
 import paymentMethodService from "@/services/api/paymentMethodService";
-import Error from "@/components/ui/Error";
 
 // Helper function to create delay
 const delay = (ms) => new Promise(resolve => setTimeout(resolve, ms))
@@ -333,11 +331,10 @@ export const subscriptionService = {
           confidence: 0.95,
           lastSeen: "2024-01-10T00:00:00Z"
         },
-        {
+{
           serviceName: "Dropbox",
           amount: 9.99,
-          frequency: "monthly", 
-frequency: "monthly", 
+          frequency: "monthly",
           confidence: 0.87,
           lastSeen: "2024-01-08T00:00:00Z"
         }
@@ -346,6 +343,94 @@ frequency: "monthly",
       return potentialSubscriptions
     } catch (error) {
       throw new Error("Failed to analyze transactions for subscriptions")
+    }
+  },
+
+  async simulatePaymentFailure(subscriptionId, reason = "insufficient_funds") {
+    await delay(300)
+    try {
+      const subscriptionIndex = subscriptionsState.findIndex(s => s.Id === parseInt(subscriptionId))
+      if (subscriptionIndex === -1) {
+        throw new Error("Subscription not found")
+      }
+
+      const subscription = subscriptionsState[subscriptionIndex]
+      const now = new Date()
+
+      // Create failed payment record
+      const failedPayment = {
+        Id: `failed_${subscriptionId}_${Date.now()}`,
+        subscriptionId: subscription.Id,
+        amount: subscription.amount,
+        currency: subscription.currency,
+        attemptedAt: now.toISOString(),
+        reason: reason,
+        retryCount: 0,
+        maxRetries: 3,
+        nextRetryDate: new Date(now.getTime() + 24 * 60 * 60 * 1000).toISOString() // 24 hours later
+      }
+
+      // Store failed payment (in real app, this would be in database)
+      if (!subscriptionsState[subscriptionIndex].failedPayments) {
+        subscriptionsState[subscriptionIndex].failedPayments = []
+      }
+      subscriptionsState[subscriptionIndex].failedPayments.push(failedPayment)
+
+      return failedPayment
+    } catch (error) {
+      throw new Error("Failed to simulate payment failure: " + error.message)
+    }
+  },
+
+  async retryFailedPayment(subscriptionId, failedPaymentId) {
+    await delay(400)
+    try {
+      const subscriptionIndex = subscriptionsState.findIndex(s => s.Id === parseInt(subscriptionId))
+      if (subscriptionIndex === -1) {
+        throw new Error("Subscription not found")
+      }
+
+      const subscription = subscriptionsState[subscriptionIndex]
+      const failedPaymentIndex = subscription.failedPayments?.findIndex(fp => fp.Id === failedPaymentId)
+      
+      if (failedPaymentIndex === -1 || !subscription.failedPayments) {
+        throw new Error("Failed payment record not found")
+      }
+
+      const failedPayment = subscription.failedPayments[failedPaymentIndex]
+      
+      // Simulate payment success/failure (80% success rate for retry)
+      const isSuccessful = Math.random() > 0.2
+
+      if (isSuccessful) {
+        // Remove from failed payments
+        subscription.failedPayments.splice(failedPaymentIndex, 1)
+        
+        // Update subscription
+        subscription.lastPaymentDate = new Date().toISOString()
+        subscription.nextPaymentDate = calculateNextPaymentDate(subscription.billingCycle)
+        subscription.totalPaid += subscription.amount
+        subscription.paymentsCount += 1
+
+        return { success: true, message: "Payment retry successful" }
+      } else {
+        // Update retry count
+        failedPayment.retryCount += 1
+        const now = new Date()
+        
+        if (failedPayment.retryCount >= failedPayment.maxRetries) {
+          // Max retries reached - pause subscription
+          subscription.status = 'paused'
+          subscription.autoRenew = false
+          return { success: false, message: "Maximum retry attempts reached. Subscription paused." }
+        } else {
+          // Schedule next retry
+          failedPayment.nextRetryDate = new Date(now.getTime() + (24 * 60 * 60 * 1000) * failedPayment.retryCount).toISOString()
+          return { success: false, message: `Payment retry failed. Next retry scheduled for ${format(new Date(failedPayment.nextRetryDate), "MMM dd, yyyy")}` }
+        }
+      }
+    } catch (error) {
+      throw new Error("Failed to retry payment: " + error.message)
     }
   },
 
@@ -370,7 +455,7 @@ frequency: "monthly",
               type: 'spending_threshold',
               subscriptionId: subscription.Id,
               serviceName: subscription.serviceName,
-message: `Monthly spending for ${subscription.serviceName} ($${monthlySpend.toFixed(2)}) exceeds your alert threshold of $${subscription.spendingAlertThreshold.toFixed(2)}`,
+              message: `Monthly spending for ${subscription.serviceName} ($${monthlySpend.toFixed(2)}) exceeds your alert threshold of $${subscription.spendingAlertThreshold.toFixed(2)}`,
               amount: monthlySpend,
               threshold: subscription.spendingAlertThreshold,
               severity: monthlySpend >= subscription.spendingAlertThreshold * 1.5 ? 'high' : 'medium',
@@ -390,7 +475,7 @@ message: `Monthly spending for ${subscription.serviceName} ($${monthlySpend.toFi
               type: 'upcoming_payment',
               subscriptionId: subscription.Id,
               serviceName: subscription.serviceName,
-message: `${subscription.serviceName} payment of $${subscription.amount.toFixed(2)} due in ${daysUntilPayment} day${daysUntilPayment > 1 ? 's' : ''}`,
+              message: `${subscription.serviceName} payment of $${subscription.amount.toFixed(2)} due in ${daysUntilPayment} day${daysUntilPayment > 1 ? 's' : ''}`,
               amount: subscription.amount,
               daysUntil: daysUntilPayment,
               severity: daysUntilPayment <= 3 ? 'high' : 'low',
@@ -399,33 +484,30 @@ message: `${subscription.serviceName} payment of $${subscription.amount.toFixed(
           }
         }
         
-        // Check auto-renewal alerts
+// Check auto-renewal alerts
         if (subscription.autoRenew && subscription.alertSettings?.autoRenewal) {
           const paymentDate = new Date(subscription.nextPaymentDate)
           const daysUntilRenewal = Math.ceil((paymentDate - now) / (1000 * 60 * 60 * 24))
           
-          if (daysUntilRenewal <= 3 && daysUntilRenewal > 0) {
+          if (daysUntilRenewal <= 30 && daysUntilRenewal > 0) {
             alerts.push({
               Id: `renewal_${subscription.Id}`,
               type: 'auto_renewal',
               subscriptionId: subscription.Id,
               serviceName: subscription.serviceName,
-message: `${subscription.serviceName} will auto-renew in ${daysUntilRenewal} day${daysUntilRenewal > 1 ? 's' : ''} for $${subscription.amount.toFixed(2)}`,
+              message: `${subscription.serviceName} will auto-renew in ${daysUntilRenewal} day${daysUntilRenewal > 1 ? 's' : ''}`,
               amount: subscription.amount,
               daysUntil: daysUntilRenewal,
-              severity: 'medium',
+              severity: 'low',
               createdAt: now.toISOString()
             })
           }
         }
       }
       
-      return alerts.sort((a, b) => {
-        const severityOrder = { high: 3, medium: 2, low: 1 }
-        return severityOrder[b.severity] - severityOrder[a.severity]
-      })
+      return alerts
     } catch (error) {
-      throw new Error("Failed to get spending alerts")
+      throw new Error("Failed to load spending alerts")
     }
   },
 
@@ -465,7 +547,7 @@ message: `${subscription.serviceName} will auto-renew in ${daysUntilRenewal} day
     } catch (error) {
       throw new Error("Failed to update spending threshold: " + error.message)
     }
-}
+  }
 }
 
 // Helper function to calculate next payment date based on billing cycle

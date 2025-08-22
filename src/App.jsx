@@ -23,6 +23,7 @@ import SupportPage from "@/components/pages/SupportPage"
 import SavedMethodsPage from "@/components/pages/SavedMethodsPage"
 import SubscriptionPage from "@/components/pages/SubscriptionPage"
 import BillingCalendarPage from "@/components/pages/BillingCalendarPage"
+import AlertsPage from "@/components/pages/AlertsPage"
 function App() {
   return (
     <>
@@ -30,8 +31,8 @@ function App() {
 <Routes>
 <Route path="/" element={<Layout />}>
             <Route index element={<WalletPage />} />
-<Route index element={<WalletPage />} />
             <Route path="/dashboard" element={<DashboardPage />} />
+            <Route path="/alerts" element={<AlertsPage />} />
             <Route path="/payments" element={<PaymentsPage />} />
             <Route path="/payments/transfer" element={<P2PTransferPage />} />
             <Route path="/payments/exchange" element={<CurrencyExchangePage />} />
