@@ -26,6 +26,34 @@ let alertsState = [
   },
   {
     Id: 2,
+    type: 'fraud_detected',
+    title: 'Suspicious Activity Detected',
+    message: 'Unusual transaction pattern detected from unknown device. Transaction of $850 blocked for your protection.',
+    severity: 'high',
+    amount: 850,
+    currency: 'USD',
+    location: 'Los Angeles, CA',
+    deviceType: 'Unknown Device',
+    ipAddress: '198.51.100.23',
+    isRead: false,
+    createdAt: new Date(Date.now() - 30 * 60 * 1000).toISOString(), // 30 minutes ago
+    updatedAt: new Date(Date.now() - 30 * 60 * 1000).toISOString()
+  },
+  {
+    Id: 3,
+    type: 'security_alert',
+    title: 'New Device Login Detected',
+    message: 'A new device has accessed your account from Los Angeles, CA. If this wasn\'t you, please secure your account immediately.',
+    severity: 'high',
+    location: 'Los Angeles, CA',
+    deviceType: 'Chrome Mobile',
+    ipAddress: '198.51.100.23',
+    isRead: false,
+    createdAt: new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString(), // 24 hours ago
+    updatedAt: new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString()
+  },
+  {
+    Id: 4,
     type: 'upcoming_payment',
     subscriptionId: 2,
     serviceName: 'Spotify',
@@ -41,7 +69,19 @@ let alertsState = [
     updatedAt: new Date(Date.now() - 1 * 60 * 60 * 1000).toISOString()
   },
   {
-    Id: 3,
+    Id: 5,
+    type: 'velocity_alert',
+    title: 'Velocity Limit Exceeded',
+    message: 'Multiple transactions detected within a short time frame. Some transactions have been temporarily blocked for verification.',
+    severity: 'medium',
+    transactionCount: 5,
+    timeFrame: '10 minutes',
+    isRead: true,
+    createdAt: new Date(Date.now() - 4 * 60 * 60 * 1000).toISOString(), // 4 hours ago
+    updatedAt: new Date(Date.now() - 2 * 60 * 60 * 1000).toISOString()
+  },
+  {
+    Id: 6,
     type: 'spending_threshold',
     subscriptionId: 3,
     serviceName: 'Adobe Creative Cloud',
@@ -56,7 +96,7 @@ let alertsState = [
     updatedAt: new Date(Date.now() - 12 * 60 * 60 * 1000).toISOString()
   },
   {
-    Id: 4,
+    Id: 7,
     type: 'failed_payment',
     subscriptionId: 4,
     serviceName: 'Dropbox',
@@ -74,7 +114,7 @@ let alertsState = [
     updatedAt: new Date(Date.now() - 6 * 60 * 60 * 1000).toISOString()
   },
   {
-    Id: 5,
+    Id: 8,
     type: 'upcoming_payment',
     subscriptionId: 5,
     serviceName: 'Microsoft 365',

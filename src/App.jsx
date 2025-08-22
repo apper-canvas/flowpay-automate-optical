@@ -31,6 +31,7 @@ import BillingCalendarPage from "@/components/pages/BillingCalendarPage";
 import NotificationsPage from "@/components/pages/NotificationsPage";
 import Layout from "@/components/pages/Layout";
 import MorePage from "@/components/pages/MorePage";
+import SecurityPage from "@/components/pages/SecurityPage";
 import QRScannerPage from "@/components/pages/QRScannerPage";
 function App() {
   return (
@@ -54,7 +55,8 @@ function App() {
             <Route path="/business/tools" element={<ToolsPage />} />
             <Route path="/business/payment-links" element={<PaymentLinksPage />} />
             <Route path="/business/invoices" element={<InvoicePage />} />
-            <Route path="/more" element={<MorePage />} />
+<Route path="/more" element={<MorePage />} />
+            <Route path="/more/security" element={<SecurityPage />} />
             <Route path="/settings" element={<SettingsPage />} />
             <Route path="/settings/notifications" element={<NotificationsPage />} />
             <Route path="/settings/saved-methods" element={<SavedMethodsPage />} />
