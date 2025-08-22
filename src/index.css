@@ -23,22 +23,27 @@ h1, h2, h3, h4, h5, h6 {
   font-size: 14px;
   font-weight: 500;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  color: white;
 }
 
 .Toastify__toast--success {
   background: linear-gradient(135deg, #22C55E 0%, #16A34A 100%);
+  color: white;
 }
 
 .Toastify__toast--error {
   background: linear-gradient(135deg, #EF4444 0%, #DC2626 100%);
+  color: white;
 }
 
 .Toastify__toast--warning {
   background: linear-gradient(135deg, #F59E0B 0%, #D97706 100%);
+  color: white;
 }
 
 .Toastify__toast--info {
   background: linear-gradient(135deg, #3B82F6 0%, #2563EB 100%);
+  color: white;
 }
 
 .Toastify__progress-bar {
