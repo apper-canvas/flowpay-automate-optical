@@ -453,12 +453,11 @@ throw new Error("Failed to generate QR code")
         monthlyTrend: [
           { month: "Dec 2023", fees: 3280.45, volume: 138520.30 },
           { month: "Jan 2024", fees: 3486.02, volume: 145250.85 }
-        ]
-      }
+]
+      };
       return { ...feeBreakdown }
     } catch (error) {
       throw new Error("Failed to load fee breakdown")
-} catch (error) {
-      throw new Error("Failed to load fee breakdown")
     }
   }
+}

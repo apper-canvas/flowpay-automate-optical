@@ -193,8 +193,9 @@ Generate professional invoices
                   </p>
                 </div>
               </div>
-            </Card>
+</Card>
           </div>
+        </motion.div>
 
         {/* Revenue Analytics Chart */}
         <motion.div
