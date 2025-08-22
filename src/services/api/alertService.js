@@ -1,10 +1,8 @@
 import { format } from "date-fns";
-import React from "react";
 import subscriptionService from "@/services/api/subscriptionService";
-import Error from "@/components/ui/Error";
 
 // Helper function to create delay
-const delay = (ms) => new Promise(resolve => setTimeout(resolve, ms))
+const delay = (ms) => new Promise(resolve => setTimeout(resolve, ms));
 
 // In-memory storage for runtime data
 let alertsState = [
@@ -408,7 +406,6 @@ export const alertService = {
     }
   },
 
-  async searchAlerts(query) {
 async searchAlerts(query) {
     await delay(200)
     try {
@@ -416,13 +413,14 @@ async searchAlerts(query) {
       const filtered = alertsState.filter(alert => 
         alert.title.toLowerCase().includes(lowercaseQuery) ||
         alert.message.toLowerCase().includes(lowercaseQuery) ||
-        alert.serviceName.toLowerCase().includes(lowercaseQuery)
+        alert.serviceName?.toLowerCase().includes(lowercaseQuery)
       )
 
       return filtered.map(alert => ({ ...alert }))
     } catch (error) {
       throw new Error("Failed to search alerts")
     }
+  },
 
   async createSecurityAlert(alertData) {
     await delay(200)
