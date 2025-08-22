@@ -12,6 +12,9 @@ const BusinessQuickActions = ({ onActionComplete }) => {
   const [showRefundModal, setShowRefundModal] = useState(false)
   const [showInvoiceModal, setShowInvoiceModal] = useState(false)
   const [showPaymentLinkModal, setShowPaymentLinkModal] = useState(false)
+  const [availableTransactions, setAvailableTransactions] = useState([])
+  const [searchingTransaction, setSearchingTransaction] = useState(false)
+  const [selectedTransaction, setSelectedTransaction] = useState(null)
   
   const [refundForm, setRefundForm] = useState({
     transactionId: "",
@@ -33,17 +36,73 @@ const BusinessQuickActions = ({ onActionComplete }) => {
     expiryHours: "24"
   })
 
+  const searchTransaction = async (transactionId) => {
+    if (!transactionId) {
+      setSelectedTransaction(null)
+      return
+    }
+    
+    try {
+      setSearchingTransaction(true)
+      const transactions = await businessService.getBusinessTransactions()
+      const found = transactions.find(t => t.Id.toString() === transactionId.toString())
+      
+      if (found && found.refundable && found.status === "completed") {
+        setSelectedTransaction(found)
+        setRefundForm(prev => ({
+          ...prev,
+          amount: found.amount.toString()
+        }))
+      } else if (found && !found.refundable) {
+        toast.error("This transaction is not refundable")
+        setSelectedTransaction(null)
+      } else if (found && found.status !== "completed") {
+        toast.error("Only completed transactions can be refunded")
+        setSelectedTransaction(null)
+      } else {
+        toast.error("Transaction not found")
+        setSelectedTransaction(null)
+      }
+    } catch (error) {
+      toast.error("Error searching for transaction")
+      setSelectedTransaction(null)
+    } finally {
+      setSearchingTransaction(false)
+    }
+  }
+
   const handleRefund = async () => {
+    if (!selectedTransaction) {
+      toast.error("Please search and select a valid transaction first")
+      return
+    }
+    
+    if (!refundForm.amount || parseFloat(refundForm.amount) <= 0) {
+      toast.error("Please enter a valid refund amount")
+      return
+    }
+    
+    if (parseFloat(refundForm.amount) > selectedTransaction.amount) {
+      toast.error("Refund amount cannot exceed original transaction amount")
+      return
+    }
+    
+    if (!refundForm.reason.trim()) {
+      toast.error("Please provide a reason for the refund")
+      return
+    }
+
     try {
       setLoading("refund")
       await businessService.processRefund(
-        refundForm.transactionId,
+        selectedTransaction.Id,
         refundForm.amount,
         refundForm.reason
       )
-      toast.success("Refund processed successfully")
+      toast.success(`Refund of $${refundForm.amount} processed successfully for ${selectedTransaction.customer}`)
       setShowRefundModal(false)
       setRefundForm({ transactionId: "", amount: "", reason: "" })
+      setSelectedTransaction(null)
       onActionComplete?.()
     } catch (error) {
       toast.error(error.message)
@@ -188,48 +247,104 @@ const BusinessQuickActions = ({ onActionComplete }) => {
         ))}
       </div>
 
-      {/* Refund Modal */}
+{/* Enhanced Refund Modal */}
       {showRefundModal && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
           <Card className="w-full max-w-md" padding="lg">
             <div className="space-y-4">
-              <h3 className="text-lg font-display font-semibold text-gray-900">
-                Process Refund
-              </h3>
+              <div className="text-center">
+                <h3 className="text-lg font-display font-semibold text-gray-900 mb-2">
+                  Process Refund
+                </h3>
+                <p className="text-gray-600 text-sm">
+                  Search for the original transaction and process a refund
+                </p>
+              </div>
+              
+              <div className="space-y-3">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    Transaction ID *
+                  </label>
+                  <div className="relative">
+                    <input
+                      type="text"
+                      value={refundForm.transactionId}
+                      onChange={(e) => {
+                        const value = e.target.value
+                        setRefundForm({...refundForm, transactionId: value})
+                        if (value.length >= 2) {
+                          searchTransaction(value)
+                        } else {
+                          setSelectedTransaction(null)
+                        }
+                      }}
+                      placeholder="Enter transaction ID (e.g., 101)"
+                      className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary/20 focus:border-primary pr-10"
+                    />
+                    {searchingTransaction && (
+                      <div className="absolute right-3 top-1/2 transform -translate-y-1/2">
+                        <ApperIcon name="Loader2" size={16} className="animate-spin text-gray-400" />
+                      </div>
+                    )}
+                  </div>
+                </div>
+                
+                {selectedTransaction && (
+                  <div className="bg-green-50 border border-green-200 p-3 rounded-lg">
+                    <div className="flex items-center space-x-2 mb-2">
+                      <ApperIcon name="CheckCircle" size={16} className="text-green-600" />
+                      <span className="text-sm font-medium text-green-800">Transaction Found</span>
+                    </div>
+                    <div className="text-xs text-green-700 space-y-1">
+                      <p><span className="font-medium">Customer:</span> {selectedTransaction.customer}</p>
+                      <p><span className="font-medium">Amount:</span> ${selectedTransaction.amount}</p>
+                      <p><span className="font-medium">Payment Method:</span> {selectedTransaction.paymentMethod}</p>
+                      <p><span className="font-medium">Date:</span> {new Date(selectedTransaction.timestamp).toLocaleDateString()}</p>
+                    </div>
+                  </div>
+                )}
+              </div>
               
               <Input
-                label="Transaction ID"
-                value={refundForm.transactionId}
-                onChange={(e) => setRefundForm({...refundForm, transactionId: e.target.value})}
-                placeholder="Enter transaction ID"
-              />
-              
-              <Input
-                label="Refund Amount"
+                label="Refund Amount *"
                 type="number"
                 value={refundForm.amount}
                 onChange={(e) => setRefundForm({...refundForm, amount: e.target.value})}
                 placeholder="0.00"
+                max={selectedTransaction?.amount}
+                disabled={!selectedTransaction}
               />
               
-              <Input
-                label="Reason"
-                value={refundForm.reason}
-                onChange={(e) => setRefundForm({...refundForm, reason: e.target.value})}
-                placeholder="Reason for refund"
-              />
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Reason for Refund *
+                </label>
+                <textarea
+                  value={refundForm.reason}
+                  onChange={(e) => setRefundForm({...refundForm, reason: e.target.value})}
+                  placeholder="Provide a detailed reason for the refund..."
+                  rows="3"
+                  className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary/20 focus:border-primary resize-none"
+                  disabled={!selectedTransaction}
+                />
+              </div>
               
-              <div className="flex space-x-3">
+              <div className="flex space-x-3 pt-4">
                 <Button
                   variant="ghost"
-                  onClick={() => setShowRefundModal(false)}
+                  onClick={() => {
+                    setShowRefundModal(false)
+                    setRefundForm({ transactionId: "", amount: "", reason: "" })
+                    setSelectedTransaction(null)
+                  }}
                   className="flex-1"
                 >
                   Cancel
                 </Button>
                 <Button
                   onClick={handleRefund}
-                  disabled={loading === "refund"}
+                  disabled={loading === "refund" || !selectedTransaction || !refundForm.amount || !refundForm.reason}
                   className="flex-1"
                 >
                   {loading === "refund" ? "Processing..." : "Process Refund"}
