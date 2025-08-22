@@ -695,6 +695,164 @@ throw new Error(`Failed to generate ${reportType} report`)
       return { ...linkDetails }
     } catch (error) {
       throw new Error("Failed to load payment link details")
+throw new Error("Failed to load payment link details")
+    }
+  }
+
+// Security and Activity integration for business accounts
+export const businessSecurityService = {
+  async getBusinessSecurityMetrics() {
+    await delay(300);
+    try {
+      const securityMetrics = {
+        securityScore: 92,
+        lastSecurityScan: new Date(Date.now() - 2 * 60 * 60 * 1000).toISOString(),
+        suspiciousTransactions: 1,
+        blockedAttempts: 3,
+        fraudAlerts: 0,
+        complianceStatus: "compliant",
+        riskLevel: "low",
+        activeThreats: 0,
+        securityEvents: 12,
+        lastPasswordChange: new Date(Date.now() - 15 * 24 * 60 * 60 * 1000).toISOString(),
+        twoFactorEnabled: true,
+        apiSecurityEnabled: true,
+        webhookSecurityEnabled: true
+      };
+
+      return { ...securityMetrics };
+    } catch (error) {
+      throw new Error("Failed to load business security metrics");
+    }
+  },
+
+  async getBusinessActivityLog(limit = 50) {
+    await delay(400);
+    try {
+      const businessActivity = [
+        {
+          Id: 1,
+          type: "payment_processed",
+          action: "Payment processed successfully",
+          amount: 2450.75,
+          currency: "USD",
+          customer: "John Smith",
+          paymentMethod: "Credit Card",
+          timestamp: new Date(Date.now() - 30 * 60 * 1000).toISOString(),
+          risk: "low",
+          transactionId: "TXN_BIZ_001"
+        },
+        {
+          Id: 2,
+          type: "security_scan",
+          action: "Automated security scan completed",
+          timestamp: new Date(Date.now() - 2 * 60 * 60 * 1000).toISOString(),
+          risk: "low",
+          findings: 0,
+          scanType: "vulnerability"
+        },
+        {
+          Id: 3,
+          type: "suspicious_activity",
+          action: "Suspicious payment pattern detected",
+          amount: 5000,
+          currency: "USD",
+          location: "Unknown Location",
+          timestamp: new Date(Date.now() - 4 * 60 * 60 * 1000).toISOString(),
+          risk: "high",
+          blocked: true,
+          reason: "velocity_limit"
+        },
+        {
+          Id: 4,
+          type: "api_access",
+          action: "API key used for transaction",
+          endpoint: "/payments/create",
+          timestamp: new Date(Date.now() - 6 * 60 * 60 * 1000).toISOString(),
+          risk: "low",
+          apiKeyId: "key_xyz123"
+        },
+        {
+          Id: 5,
+          type: "settings_changed",
+          action: "Webhook endpoint updated",
+          oldValue: "https://old.webhook.com",
+          newValue: "https://new.webhook.com",
+          timestamp: new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString(),
+          risk: "medium",
+          userId: "admin_001"
+        }
+      ];
+
+      const sorted = businessActivity.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
+      const activities = limit ? sorted.slice(0, limit) : sorted;
+      
+      return activities.map(activity => ({ ...activity }));
+    } catch (error) {
+      throw new Error("Failed to load business activity log");
+    }
+  },
+
+  async logBusinessSecurityEvent(eventData) {
+    await delay(200);
+    try {
+      const securityEvent = {
+        Id: Date.now(),
+        type: eventData.type || "security_event",
+        action: eventData.action,
+        timestamp: new Date().toISOString(),
+        risk: eventData.risk || "medium",
+        ...eventData
+      };
+
+      return { ...securityEvent };
+    } catch (error) {
+      throw new Error("Failed to log business security event");
+    }
+  },
+
+  async updateSecuritySettings(settings) {
+    await delay(300);
+    try {
+      const updatedSettings = {
+        twoFactorRequired: settings.twoFactorRequired || true,
+        apiRateLimiting: settings.apiRateLimiting || true,
+        webhookSecurityEnabled: settings.webhookSecurityEnabled || true,
+        fraudProtectionLevel: settings.fraudProtectionLevel || "high",
+        velocityChecksEnabled: settings.velocityChecksEnabled || true,
+        geoBlockingEnabled: settings.geoBlockingEnabled || false,
+        updatedAt: new Date().toISOString()
+      };
+
+      return { ...updatedSettings };
+    } catch (error) {
+      throw new Error("Failed to update security settings");
+    }
+  },
+
+  async generateSecurityReport(reportType, dateRange) {
+    await delay(600);
+    try {
+      const report = {
+        type: reportType,
+        dateRange: dateRange,
+        generatedAt: new Date().toISOString(),
+        summary: {
+          totalSecurityEvents: 45,
+          highRiskEvents: 3,
+          mediumRiskEvents: 12,
+          lowRiskEvents: 30,
+          blockedTransactions: 8,
+          suspiciousLogins: 2,
+          complianceScore: 95
+        },
+        downloadUrl: `https://reports.flowpay.com/security-${reportType}-${Date.now()}.pdf`,
+        fileName: `security-${reportType}-report-${new Date().toISOString().split('T')[0]}.pdf`
+      };
+
+      return { ...report };
+    } catch (error) {
+      throw new Error("Failed to generate security report");
     }
   }
 }

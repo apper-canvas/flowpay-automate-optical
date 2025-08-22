@@ -527,6 +527,92 @@ async searchAlerts(query) {
       return await this.createAlert(limitAlert)
     } catch (error) {
       throw new Error("Failed to create transaction limit alert: " + error.message)
+}
+  },
+
+  async createDeviceAlert(deviceData) {
+    await delay(200);
+    try {
+      const deviceAlert = {
+        type: 'device_new',
+        title: `New Device Detected: ${deviceData.deviceName}`,
+        message: `A new device "${deviceData.deviceName}" has accessed your account from ${deviceData.location}. If this wasn't you, please secure your account immediately.`,
+        severity: deviceData.trusted ? 'low' : 'high',
+        location: deviceData.location,
+        deviceType: deviceData.deviceType,
+        ipAddress: deviceData.ipAddress,
+        deviceId: deviceData.deviceId,
+        trusted: deviceData.trusted || false,
+        ...deviceData
+      };
+
+      return await this.createAlert(deviceAlert);
+    } catch (error) {
+      throw new Error("Failed to create device alert: " + error.message);
+    }
+  },
+
+  async createActivityAlert(activityData) {
+    await delay(200);
+    try {
+      const activityAlert = {
+        type: 'activity_alert',
+        title: activityData.title || 'Unusual Activity Detected',
+        message: activityData.message,
+        severity: activityData.severity || 'medium',
+        activityType: activityData.activityType,
+        location: activityData.location,
+        timestamp: activityData.timestamp || new Date().toISOString(),
+        details: activityData.details || {},
+        ...activityData
+      };
+
+      return await this.createAlert(activityAlert);
+    } catch (error) {
+      throw new Error("Failed to create activity alert: " + error.message);
+    }
+  },
+
+  async createVelocityAlert(velocityData) {
+    await delay(200);
+    try {
+      const velocityAlert = {
+        type: 'velocity_alert',
+        title: 'Velocity Limit Exceeded',
+        message: `Multiple transactions (${velocityData.transactionCount}) detected within ${velocityData.timeFrame}. Some transactions have been temporarily blocked for verification.`,
+        severity: 'medium',
+        transactionCount: velocityData.transactionCount,
+        timeFrame: velocityData.timeFrame,
+        totalAmount: velocityData.totalAmount,
+        blockedCount: velocityData.blockedCount,
+        ...velocityData
+      };
+
+      return await this.createAlert(velocityAlert);
+    } catch (error) {
+      throw new Error("Failed to create velocity alert: " + error.message);
+    }
+  },
+
+  async createLocationAlert(locationData) {
+    await delay(200);
+    try {
+      const locationAlert = {
+        type: 'location_alert',
+        title: 'Unusual Location Activity',
+        message: `Activity detected from unusual location: ${locationData.location}. If this wasn't you, please review your account security.`,
+        severity: 'high',
+        location: locationData.location,
+        previousLocation: locationData.previousLocation,
+        distance: locationData.distance,
+        timeSpan: locationData.timeSpan,
+        ipAddress: locationData.ipAddress,
+        ...locationData
+      };
+
+      return await this.createAlert(locationAlert);
+    } catch (error) {
+      throw new Error("Failed to create location alert: " + error.message);
     }
   }
 }

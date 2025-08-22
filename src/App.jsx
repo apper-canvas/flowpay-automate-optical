@@ -58,6 +58,8 @@ function App() {
 <Route path="/business/invoices" element={<InvoicePage />} />
             <Route path="/more" element={<MorePage />} />
             <Route path="/more/security" element={<SecurityPage />} />
+            <Route path="/more/security/devices" element={<SecurityPage />} />
+            <Route path="/more/security/activity" element={<SecurityPage />} />
             <Route path="/more/disputes" element={<DisputePage />} />
             <Route path="/more/disputes/:id" element={<DisputePage />} />
             <Route path="/settings" element={<SettingsPage />} />

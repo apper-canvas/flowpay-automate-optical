@@ -17,10 +17,11 @@ const SecurityPage = () => {
   const navigate = useNavigate()
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState("")
-  const [activeTab, setActiveTab] = useState("dashboard")
+const [activeTab, setActiveTab] = useState("dashboard")
   const [securityData, setSecurityData] = useState(null)
   const [devices, setDevices] = useState([])
   const [securityEvents, setSecurityEvents] = useState([])
+  const [activityTimeline, setActivityTimeline] = useState([])
   const [showDeviceModal, setShowDeviceModal] = useState(false)
   const [selectedDevice, setSelectedDevice] = useState(null)
   const [actionType, setActionType] = useState("")
@@ -115,6 +116,48 @@ const SecurityPage = () => {
       timestamp: new Date(Date.now() - 3 * 24 * 60 * 60 * 1000).toISOString(),
       risk: "low"
     }
+]
+
+  // Mock activity timeline data
+  const mockActivityTimeline = [
+    {
+      Id: 1,
+      type: "login",
+      action: "Successful login",
+      device: "iPhone 14 Pro",
+      location: "San Francisco, CA",
+      timestamp: new Date(Date.now() - 30 * 60 * 1000).toISOString(),
+      risk: "low",
+      ipAddress: "192.168.1.105"
+    },
+    {
+      Id: 2,
+      type: "payment",
+      action: "Payment processed",
+      amount: 89.50,
+      currency: "USD",
+      merchant: "Netflix",
+      timestamp: new Date(Date.now() - 2 * 60 * 60 * 1000).toISOString(),
+      risk: "low"
+    },
+    {
+      Id: 3,
+      type: "security",
+      action: "Two-factor authentication enabled",
+      device: "iPhone 14 Pro",
+      location: "San Francisco, CA",
+      timestamp: new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString(),
+      risk: "low"
+    },
+    {
+      Id: 4,
+      type: "device",
+      action: "Device trusted",
+      device: "MacBook Pro",
+      location: "San Francisco, CA",
+      timestamp: new Date(Date.now() - 3 * 24 * 60 * 60 * 1000).toISOString(),
+      risk: "low"
+    }
   ]
 
   const loadData = async () => {
@@ -128,6 +171,7 @@ const SecurityPage = () => {
       setSecurityData(mockSecurityData)
       setDevices(mockDevices)
       setSecurityEvents(mockSecurityEvents)
+      setActivityTimeline(mockActivityTimeline)
     } catch (err) {
       setError(err.message)
     } finally {
@@ -229,13 +273,17 @@ const SecurityPage = () => {
     }
   }
 
-  const getEventIcon = (type) => {
+const getEventIcon = (type) => {
     switch (type) {
       case "login": return "LogIn"
       case "transaction_blocked": return "Shield"
       case "device_new": return "Smartphone"
+      case "device": return "Smartphone"
       case "settings_changed": return "Settings"
+      case "settings": return "Settings"
       case "fraud_detected": return "AlertTriangle"
+      case "security": return "Shield"
+      case "payment": return "CreditCard"
       default: return "Activity"
     }
   }
@@ -625,16 +673,18 @@ const SecurityPage = () => {
     </div>
   )
 
-  const ActivityTimeline = () => (
+const ActivityTimeline = () => (
     <div className="space-y-6">
       <div>
         <h3 className="text-lg font-display font-semibold text-gray-900 mb-4">
-          Security Activity Timeline
+          Complete Activity Timeline
         </h3>
         
         <div className="space-y-4">
-          {securityEvents.map((event, index) => (
-            <Card key={event.Id} padding="lg">
+          {[...securityEvents, ...activityTimeline]
+            .sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp))
+            .map((event, index) => (
+            <Card key={`${event.type}-${event.Id}-${index}`} padding="lg">
               <div className="flex items-start space-x-3">
                 <div className={`w-10 h-10 rounded-full flex items-center justify-center ${
                   event.risk === 'high' ? 'bg-error/10' :
@@ -677,7 +727,7 @@ const SecurityPage = () => {
                       <p>IP Address: {event.ipAddress}</p>
                     )}
                     {event.amount && (
-                      <p>Amount: ${event.amount.toLocaleString()}</p>
+                      <p>Amount: ${typeof event.amount === 'number' ? event.amount.toLocaleString() : event.amount}</p>
                     )}
                     {event.merchant && (
                       <p>Merchant: {event.merchant}</p>
