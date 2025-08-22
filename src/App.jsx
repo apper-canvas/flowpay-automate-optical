@@ -22,6 +22,7 @@ import InvoicePage from "@/components/pages/InvoicePage"
 import SupportPage from "@/components/pages/SupportPage"
 import SavedMethodsPage from "@/components/pages/SavedMethodsPage"
 import SubscriptionPage from "@/components/pages/SubscriptionPage"
+import BillingCalendarPage from "@/components/pages/BillingCalendarPage"
 function App() {
   return (
     <>
@@ -47,6 +48,7 @@ function App() {
             <Route path="/settings/saved-methods" element={<SavedMethodsPage />} />
 <Route path="/settings/support" element={<SupportPage />} />
             <Route path="/subscriptions" element={<SubscriptionPage />} />
+            <Route path="/billing-calendar" element={<BillingCalendarPage />} />
             <Route path="/virtual-cards" element={<VirtualCardsPage />} />
           </Route>
         </Routes>

@@ -11,8 +11,9 @@ title: "Account",
       items: [
         { icon: "User", title: "Profile Settings", description: "Manage your personal information", action: () => toast.info("Profile settings coming soon!") },
         { icon: "Shield", title: "Security", description: "Password, 2FA, and privacy settings", action: () => toast.info("Security settings coming soon!") },
-        { icon: "Bell", title: "Notifications", description: "Customize your alerts and updates", action: () => toast.info("Notification settings coming soon!") },
-        { icon: "CreditCard", title: "Manage Subscriptions", description: "View and manage your recurring payments", action: () => window.location.href = "/subscriptions" }
+{ icon: "Bell", title: "Notifications", description: "Customize your alerts and updates", action: () => toast.info("Notification settings coming soon!") },
+        { icon: "CreditCard", title: "Manage Subscriptions", description: "View and manage your recurring payments", action: () => window.location.href = "/subscriptions" },
+        { icon: "Calendar", title: "Billing Calendar", description: "Monthly view of all upcoming payments", action: () => window.location.href = "/billing-calendar" }
       ]
     },
     {
