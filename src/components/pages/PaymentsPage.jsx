@@ -29,11 +29,12 @@ const PaymentsPage = () => {
       description: "Split expenses with your group easily",
       comingSoon: true
     },
-    {
+{
       icon: "QrCode",
       title: "Pay with QR",
       description: "Scan and pay at participating merchants",
-      comingSoon: true
+      comingSoon: false,
+      path: "/payments/qr-scanner"
     },
     {
       icon: "Phone",
