@@ -14,7 +14,7 @@ const PaymentsPage = () => {
       navigate(feature.path);
     }
   };
-const PaymentsPage = () => {
+
   const paymentFeatures = [
     {
       icon: "Send",
@@ -41,7 +41,7 @@ const PaymentsPage = () => {
       description: "Recharge your mobile phone instantly",
       comingSoon: true
     }
-  ]
+  ];
 
   return (
     <div className="min-h-screen bg-background">
@@ -68,7 +68,7 @@ const PaymentsPage = () => {
           transition={{ delay: 0.1 }}
           className="grid gap-4 sm:grid-cols-2"
         >
-{paymentFeatures.map((feature, index) => (
+          {paymentFeatures.map((feature, index) => (
             <motion.div
               key={feature.title}
               initial={{ opacity: 0, y: 20 }}
@@ -124,7 +124,7 @@ const PaymentsPage = () => {
         </motion.div>
       </div>
     </div>
-  )
-}
+  );
+};
 
 export default PaymentsPage
