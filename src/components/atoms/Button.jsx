@@ -17,8 +17,9 @@ const Button = forwardRef(({
     secondary: "bg-surface text-gray-700 border border-gray-200 hover:bg-gray-50 shadow-sm hover:shadow-md",
     outline: "border border-primary text-primary hover:bg-primary hover:text-white",
     ghost: "text-gray-600 hover:text-gray-900 hover:bg-gray-100",
-    accent: "bg-gradient-to-r from-accent to-orange-500 text-white shadow-lg hover:shadow-xl active:scale-[0.98]",
-    success: "bg-gradient-to-r from-success to-green-600 text-white shadow-lg hover:shadow-xl active:scale-[0.98]"
+accent: "bg-gradient-to-r from-accent to-orange-500 text-white shadow-lg hover:shadow-xl active:scale-[0.98]",
+    success: "bg-gradient-to-r from-success to-green-600 text-white shadow-lg hover:shadow-xl active:scale-[0.98]",
+    info: "bg-gradient-to-r from-info to-blue-600 text-white shadow-lg hover:shadow-xl active:scale-[0.98]"
   }
   
   const sizes = {

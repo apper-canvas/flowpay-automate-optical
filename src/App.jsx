@@ -16,6 +16,7 @@ import PaymentsPage from "@/components/pages/PaymentsPage";
 import ToolsPage from "@/components/pages/ToolsPage";
 import SettlementsPage from "@/components/pages/SettlementsPage";
 import BusinessPage from "@/components/pages/BusinessPage";
+import InvoicePage from "@/components/pages/InvoicePage";
 import SupportPage from "@/components/pages/SupportPage";
 function App() {
   return (
@@ -34,6 +35,7 @@ function App() {
 <Route path="/business/settlements" element={<SettlementsPage />} />
             <Route path="/business/tools" element={<ToolsPage />} />
             <Route path="/business/payment-links" element={<PaymentLinksPage />} />
+            <Route path="/business/invoices" element={<InvoicePage />} />
             <Route path="/more" element={<MorePage />} />
             <Route path="/settings" element={<SettingsPage />} />
             <Route path="/settings/notifications" element={<NotificationsPage />} />
