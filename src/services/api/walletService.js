@@ -241,7 +241,75 @@ throw new Error("Failed to filter transactions")
         transaction: { ...newTransaction }
       }
     } catch (error) {
-      throw new Error("Failed to send P2P transfer")
+throw new Error("Failed to send P2P transfer")
+    }
+  },
+
+  async currencyExchange({ fromWalletId, toWalletId, fromAmount, toAmount, exchangeRate }) {
+    await delay(500)
+    try {
+      const fromWalletIndex = walletsState.findIndex(w => w.Id === parseInt(fromWalletId))
+      const toWalletIndex = walletsState.findIndex(w => w.Id === parseInt(toWalletId))
+      
+      if (fromWalletIndex === -1) {
+        throw new Error("Source wallet not found")
+      }
+      if (toWalletIndex === -1) {
+        throw new Error("Target wallet not found")
+      }
+
+      const fromWallet = walletsState[fromWalletIndex]
+      const toWallet = walletsState[toWalletIndex]
+      const amount = parseFloat(fromAmount)
+      const convertedAmount = parseFloat(toAmount)
+      
+      if (fromWallet.balance < amount) {
+        throw new Error("Insufficient funds in source wallet")
+      }
+
+      // Update balances
+      walletsState[fromWalletIndex] = {
+        ...fromWallet,
+        balance: fromWallet.balance - amount
+      }
+      
+      walletsState[toWalletIndex] = {
+        ...toWallet,
+        balance: toWallet.balance + convertedAmount
+      }
+
+      // Create transaction records
+      const exchangeTransaction = {
+        Id: Math.max(...transactionsState.map(t => t.Id)) + 1,
+        type: "currency_exchange",
+        amount: -amount,
+        currency: fromWallet.currency,
+        recipient: `Exchanged to ${toWallet.currency}`,
+        note: `Rate: 1 ${fromWallet.currency} = ${exchangeRate} ${toWallet.currency}`,
+        timestamp: new Date().toISOString(),
+        status: "completed"
+      }
+
+      const receiveTransaction = {
+        Id: Math.max(...transactionsState.map(t => t.Id)) + 2,
+        type: "currency_exchange",
+        amount: convertedAmount,
+        currency: toWallet.currency,
+        recipient: `Received from ${fromWallet.currency}`,
+        note: `Rate: 1 ${fromWallet.currency} = ${exchangeRate} ${toWallet.currency}`,
+        timestamp: new Date().toISOString(),
+        status: "completed"
+      }
+
+      transactionsState.unshift(exchangeTransaction, receiveTransaction)
+
+      return {
+        fromWallet: { ...walletsState[fromWalletIndex] },
+        toWallet: { ...walletsState[toWalletIndex] },
+        transactions: [exchangeTransaction, receiveTransaction]
+      }
+    } catch (error) {
+      throw new Error("Failed to process currency exchange")
     }
   }
 }

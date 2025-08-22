@@ -4,6 +4,7 @@ import Layout from "@/components/pages/Layout"
 import WalletPage from "@/components/pages/WalletPage"
 import PaymentsPage from "@/components/pages/PaymentsPage"
 import P2PTransferPage from "@/components/pages/P2PTransferPage"
+import CurrencyExchangePage from "@/components/pages/CurrencyExchangePage"
 import QRScannerPage from "@/components/pages/QRScannerPage"
 import HistoryPage from "@/components/pages/HistoryPage"
 import BusinessPage from "@/components/pages/BusinessPage"
@@ -17,9 +18,10 @@ function App() {
       <BrowserRouter>
 <Routes>
           <Route path="/" element={<Layout />}>
-            <Route index element={<WalletPage />} />
+<Route index element={<WalletPage />} />
             <Route path="/payments" element={<PaymentsPage />} />
             <Route path="/payments/transfer" element={<P2PTransferPage />} />
+            <Route path="/payments/exchange" element={<CurrencyExchangePage />} />
             <Route path="/payments/qr-scanner" element={<QRScannerPage />} />
             <Route path="/history" element={<HistoryPage />} />
             <Route path="/business" element={<BusinessPage />} />
